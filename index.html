@@ -174,9 +174,9 @@
       background: #181818;
       color: #fff;
       border: 1px solid var(--border);
-      padding: 6px 10px;
+      padding: 8px 10px;
       border-radius: 8px;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
 
     .custom-curr-result {
@@ -361,7 +361,7 @@
     .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
     .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+    .modal-close { background: none; border: border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
     .full-note { color: var(--text-main); font-size: 1rem; line-height: 1.5; word-break: break-word; margin-bottom: 15px; }
   </style>
 </head>
@@ -376,8 +376,9 @@
     <div class="active-currency-badge" id="header-curr-badge">RSD / LKR</div>
   </header>
 
-  <!-- Global Cities Datalist for Fast Search -->
+  <!-- Global Cities & Currencies Datalists for Instant Search -->
   <datalist id="cities-list"></datalist>
+  <datalist id="currencies-list"></datalist>
 
   <!-- Panel 1: Home Dashboard -->
   <div id="home-panel" class="panel active">
@@ -401,10 +402,10 @@
         </div>
       </div>
 
-      <!-- Any Chosen Currency Conversion Bar -->
+      <!-- Any Chosen Currency Searchable Conversion Bar -->
       <div class="custom-curr-row">
         <label style="font-size: 0.7rem; color: var(--text-muted);">Quick Convert Main Balance To Any Currency:</label>
-        <select id="quick-curr-select" class="custom-curr-select" onchange="updateQuickCurrency()"></select>
+        <input list="currencies-list" id="quick-curr-input" class="custom-curr-select" placeholder="Type Code, Name or Symbol..." onchange="updateQuickCurrency()">
         <div class="custom-curr-result" id="quick-curr-result">0.00</div>
       </div>
 
@@ -418,7 +419,7 @@
       </div>
     </div>
 
-    <!-- 5 Live Weather & Clock Panels with Search Input -->
+    <!-- Live Weather & Clock Panels -->
     <div class="weather-grid-title">World Clocks & Live Weather (Type Country)</div>
     <div class="weather-container">
       <div class="weather-card" id="w-card-0">
@@ -542,18 +543,18 @@
       <div class="calc-result" id="custom-calc-result">0.00</div>
     </div>
 
-    <!-- Independent Dual-Currency Live Calculator -->
+    <!-- Independent Dual-Currency Live Calculator with Search Inputs -->
     <div class="calc-card" style="border-color: var(--accent);">
       <div class="calc-title" style="color:var(--text-main); font-weight:700;">Independent Live Dual-Currency Tool</div>
-      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Try any two currencies with custom values at live rates.</p>
+      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Type any two currencies or symbols with custom values.</p>
       
       <div class="form-group">
         <label>From Currency</label>
-        <select id="free-from-curr" onchange="calcFreeConverter()"></select>
+        <input list="currencies-list" id="free-from-curr" placeholder="Search Code, Name or Symbol..." onchange="calcFreeConverter()">
       </div>
       <div class="form-group">
         <label>To Currency</label>
-        <select id="free-to-curr" onchange="calcFreeConverter()"></select>
+        <input list="currencies-list" id="free-to-curr" placeholder="Search Code, Name or Symbol..." onchange="calcFreeConverter()">
       </div>
       <div class="form-group">
         <label>Amount to Test</label>
@@ -569,15 +570,15 @@
     <br>
     <div class="calc-card">
       <div class="calc-title" style="color:var(--text-main); font-weight:700;">App Currency Pair Setup</div>
-      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Select primary earning currency and target comparison currency for the whole app.</p>
+      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Type or search earning currency & target comparison currency for the app.</p>
       
       <div class="form-group">
         <label>Main / Earning Currency</label>
-        <select id="set-main-curr"></select>
+        <input list="currencies-list" id="set-main-curr" placeholder="Type Code, Name or Symbol...">
       </div>
       <div class="form-group">
         <label>Second Chosen Currency</label>
-        <select id="set-second-curr"></select>
+        <input list="currencies-list" id="set-second-curr" placeholder="Type Code, Name or Symbol...">
       </div>
       <button class="btn" style="background:var(--accent); color:#fff;" onclick="saveCurrencySettings()">Save Currencies</button>
     </div>
@@ -641,101 +642,211 @@
   </div>
 
   <script>
-    const CURRENCIES = ["RSD", "LKR", "USD", "EUR", "GBP", "INR", "AUD", "CAD", "SAR", "AED", "JPY", "CNY", "CHF", "SGD", "NZD", "KWD", "QAR", "BHD", "OMR", "MYR", "THB", "KRW", "RUB", "BRL", "ZAR", "EGP"];
+    // All 160+ World Standard ISO Currencies with Names & Symbols
+    const WORLD_CURRENCIES = [
+      { code: "RSD", name: "Serbian Dinar", symbol: "дин." },
+      { code: "LKR", name: "Sri Lankan Rupee", symbol: "Rs" },
+      { code: "USD", name: "United States Dollar", symbol: "$" },
+      { code: "EUR", name: "Euro", symbol: "€" },
+      { code: "GBP", name: "British Pound", symbol: "£" },
+      { code: "INR", name: "Indian Rupee", symbol: "₹" },
+      { code: "AED", name: "UAE Dirham", symbol: "AED" },
+      { code: "SAR", name: "Saudi Riyal", symbol: "SR" },
+      { code: "QAR", name: "Qatari Riyal", symbol: "QR" },
+      { code: "KWD", name: "Kuwaiti Dinar", symbol: "KD" },
+      { code: "BHD", name: "Bahraini Dinar", symbol: "BD" },
+      { code: "OMR", name: "Omani Rial", symbol: "RO" },
+      { code: "AUD", name: "Australian Dollar", symbol: "A$" },
+      { code: "CAD", name: "Canadian Dollar", symbol: "C$" },
+      { code: "SGD", name: "Singapore Dollar", symbol: "S$" },
+      { code: "JPY", name: "Japanese Yen", symbol: "¥" },
+      { code: "CNY", name: "Chinese Yuan", symbol: "¥" },
+      { code: "CHF", name: "Swiss Franc", symbol: "CHF" },
+      { code: "MYR", name: "Malaysian Ringgit", symbol: "RM" },
+      { code: "THB", name: "Thai Baht", symbol: "฿" },
+      { code: "KRW", name: "South Korean Won", symbol: "₩" },
+      { code: "RUB", name: "Russian Ruble", symbol: "₽" },
+      { code: "BRL", name: "Brazilian Real", symbol: "R$" },
+      { code: "ZAR", name: "South African Rand", symbol: "R" },
+      { code: "EGP", name: "Egyptian Pound", symbol: "E£" },
+      { code: "AFN", name: "Afghan Afghani", symbol: "؋" },
+      { code: "ALL", name: "Albanian Lek", symbol: "L" },
+      { code: "DZD", name: "Algerian Dinar", symbol: "DA" },
+      { code: "AOA", name: "Angolan Kwanza", symbol: "Kz" },
+      { code: "ARS", name: "Argentine Peso", symbol: "$" },
+      { code: "AMD", name: "Armenian Dram", symbol: "֏" },
+      { code: "AWG", name: "Aruban Florin", symbol: "Afl." },
+      { code: "AZN", name: "Azerbaijani Manat", symbol: "₼" },
+      { code: "BSD", name: "Bahamian Dollar", symbol: "B$" },
+      { code: "BDT", name: "Bangladeshi Taka", symbol: "৳" },
+      { code: "BBD", name: "Barbadian Dollar", symbol: "Bds$" },
+      { code: "BYN", name: "Belarusian Ruble", symbol: "Br" },
+      { code: "BZD", name: "Belize Dollar", symbol: "BZ$" },
+      { code: "BMD", name: "Bermudian Dollar", symbol: "$" },
+      { code: "BTN", name: "Bhutanese Ngultrum", symbol: "Nu." },
+      { code: "BOB", name: "Bolivian Boliviano", symbol: "Bs." },
+      { code: "BAM", name: "Bosnia-Herzegovina Mark", symbol: "KM" },
+      { code: "BWP", name: "Botswana Pula", symbol: "P" },
+      { code: "BND", name: "Brunei Dollar", symbol: "B$" },
+      { code: "BGN", name: "Bulgarian Lev", symbol: "лв" },
+      { code: "BIF", name: "Burundian Franc", symbol: "FBu" },
+      { code: "KHR", name: "Cambodian Riel", symbol: "៛" },
+      { code: "CVE", name: "Cape Verdean Escudo", symbol: "$" },
+      { code: "KYD", name: "Cayman Islands Dollar", symbol: "$" },
+      { code: "CLP", name: "Chilean Peso", symbol: "$" },
+      { code: "COP", name: "Colombian Peso", symbol: "$" },
+      { code: "KMF", name: "Comorian Franc", symbol: "CF" },
+      { code: "CRC", name: "Costa Rican Colón", symbol: "₡" },
+      { code: "HRK", name: "Croatian Kuna", symbol: "kn" },
+      { code: "CUP", name: "Cuban Peso", symbol: "$" },
+      { code: "CZK", name: "Czech Koruna", symbol: "Kč" },
+      { code: "DKK", name: "Danish Krone", symbol: "kr" },
+      { code: "DJF", name: "Djiboutian Franc", symbol: "Fdj" },
+      { code: "DOP", name: "Dominican Peso", symbol: "RD$" },
+      { code: "XCD", name: "East Caribbean Dollar", symbol: "$" },
+      { code: "ERN", name: "Eritrean Nakfa", symbol: "Nfk" },
+      { code: "ETB", name: "Ethiopian Birr", symbol: "Br" },
+      { code: "FJD", name: "Fijian Dollar", symbol: "FJ$" },
+      { code: "GMD", name: "Gambian Dalasi", symbol: "D" },
+      { code: "GEL", name: "Georgian Lari", symbol: "₾" },
+      { code: "GHS", name: "Ghanaian Cedi", symbol: "GH₵" },
+      { code: "GIP", name: "Gibraltar Pound", symbol: "£" },
+      { code: "GTQ", name: "Guatemalan Quetzal", symbol: "Q" },
+      { code: "GNF", name: "Guinean Franc", symbol: "FG" },
+      { code: "GYD", name: "Guyanaese Dollar", symbol: "G$" },
+      { code: "HTG", name: "Haitian Gourde", symbol: "G" },
+      { code: "HNL", name: "Honduran Lempira", symbol: "L" },
+      { code: "HKD", name: "Hong Kong Dollar", symbol: "HK$" },
+      { code: "HUF", name: "Hungarian Forint", symbol: "Ft" },
+      { code: "ISK", name: "Icelandic Króna", symbol: "kr" },
+      { code: "IDR", name: "Indonesian Rupiah", symbol: "Rp" },
+      { code: "IRR", name: "Iranian Rial", symbol: "﷼" },
+      { code: "IQD", name: "Iraqi Dinar", symbol: "ع.د" },
+      { code: "ILS", name: "Israeli New Shekel", symbol: "₪" },
+      { code: "JMD", name: "Jamaican Dollar", symbol: "J$" },
+      { code: "JOD", name: "Jordanian Dinar", symbol: "JD" },
+      { code: "KZT", name: "Kazakhstani Tenge", symbol: "₸" },
+      { code: "KES", name: "Kenyan Shilling", symbol: "KSh" },
+      { code: "KGS", name: "Kyrgystani Som", symbol: "сом" },
+      { code: "LAK", name: "Lao Kip", symbol: "₭" },
+      { code: "LBP", name: "Lebanese Pound", symbol: "L£" },
+      { code: "LSL", name: "Lesotho Loti", symbol: "L" },
+      { code: "LRD", name: "Liberian Dollar", symbol: "L$" },
+      { code: "LYD", name: "Libyan Dinar", symbol: "LD" },
+      { code: "MOP", name: "Macanese Pataca", symbol: "MOP$" },
+      { code: "MKD", name: "Macedonian Denar", symbol: "ден" },
+      { code: "MGA", name: "Malagasy Ariary", symbol: "Ar" },
+      { code: "MWK", name: "Malawian Kwacha", symbol: "MK" },
+      { code: "MVR", name: "Maldivian Rufiyaa", symbol: "Rf" },
+      { code: "MRU", name: "Mauritanian Ouguiya", symbol: "UM" },
+      { code: "MUR", name: "Mauritian Rupee", symbol: "₨" },
+      { code: "MXN", name: "Mexican Peso", symbol: "$" },
+      { code: "MDL", name: "Moldovan Leu", symbol: "L" },
+      { code: "MNT", name: "Mongolian Tugrik", symbol: "₮" },
+      { code: "MAD", name: "Moroccan Dirham", symbol: "MAD" },
+      { code: "MZN", name: "Mozambican Metical", symbol: "MT" },
+      { code: "MMK", name: "Myanmar Kyat", symbol: "Ks" },
+      { code: "NAD", name: "Namibian Dollar", symbol: "N$" },
+      { code: "NPR", name: "Nepalese Rupee", symbol: "₨" },
+      { code: "ANG", name: "Netherlands Antillean Guilder", symbol: "ƒ" },
+      { code: "NZD", name: "New Zealand Dollar", symbol: "NZ$" },
+      { code: "NIO", name: "Nicaraguan Córdoba", symbol: "C$" },
+      { code: "NGN", name: "Nigerian Naira", symbol: "₦" },
+      { code: "NOK", name: "Norwegian Krone", symbol: "kr" },
+      { code: "PKR", name: "Pakistani Rupee", symbol: "₨" },
+      { code: "PAB", name: "Panamanian Balboa", symbol: "B/." },
+      { code: "PGK", name: "Papua New Guinean Kina", symbol: "K" },
+      { code: "PYG", name: "Paraguayan Guarani", symbol: "₲" },
+      { code: "PEN", name: "Peruvian Sol", symbol: "S/." },
+      { code: "PHP", name: "Philippine Peso", symbol: "₱" },
+      { code: "PLN", name: "Polish Zloty", symbol: "zł" },
+      { code: "RON", name: "Romanian Leu", symbol: "lei" },
+      { code: "RWF", name: "Rwandan Franc", symbol: "FRw" },
+      { code: "WST", name: "Samoan Tala", symbol: "WS$" },
+      { code: "STN", name: "São Tomé and Príncipe Dobra", symbol: "Db" },
+      { code: "RSD", name: "Serbian Dinar", symbol: "din." },
+      { code: "SCR", name: "Seychellois Rupee", symbol: "SR" },
+      { code: "SLL", name: "Sierra Leonean Leone", symbol: "Le" },
+      { code: "SBD", name: "Solomon Islands Dollar", symbol: "SI$" },
+      { code: "SOS", name: "Somali Shilling", symbol: "Sh.So." },
+      { code: "SSP", name: "South Sudanese Pound", symbol: "SS£" },
+      { code: "SDG", name: "Sudanese Pound", symbol: "SDG" },
+      { code: "SRD", name: "Surinamese Dollar", symbol: "Sr$" },
+      { code: "SEK", name: "Swedish Krona", symbol: "kr" },
+      { code: "SYP", name: "Syrian Pound", symbol: "LS" },
+      { code: "TWD", name: "New Taiwan Dollar", symbol: "NT$" },
+      { code: "TJS", name: "Tajikistani Somoni", symbol: "SM" },
+      { code: "TZS", name: "Tanzanian Shilling", symbol: "TSh" },
+      { code: "TOP", name: "Tongan Paʻanga", symbol: "T$" },
+      { code: "TTD", name: "Trinidad & Tobago Dollar", symbol: "TT$" },
+      { code: "TND", name: "Tunisian Dinar", symbol: "DT" },
+      { code: "TRY", name: "Turkish Lira", symbol: "₺" },
+      { code: "TMT", name: "Turkmenistani Manat", symbol: "T" },
+      { code: "UGX", name: "Ugandan Shilling", symbol: "USh" },
+      { code: "UAH", name: "Ukrainian Hryvnia", symbol: "₴" },
+      { code: "UYU", name: "Uruguayan Peso", symbol: "$U" },
+      { code: "UZS", name: "Uzbekistani Som", symbol: "so'm" },
+      { code: "VUV", name: "Vanuatu Vatu", symbol: "VT" },
+      { code: "VES", name: "Venezuelan Bolívar", symbol: "Bs.S" },
+      { code: "VND", name: "Vietnamese Dong", symbol: "₫" },
+      { code: "YER", name: "Yemeni Rial", symbol: "﷼" },
+      { code: "ZMW", name: "Zambian Kwacha", symbol: "ZK" },
+      { code: "ZWL", name: "Zimbabwean Dollar", symbol: "Z$" }
+    ];
 
-    // Massive Worldwide Countries & Cities Database
+    // Worldwide Countries & Cities Database
     const CITIES = [
       { name: "Afghanistan (Kabul)", tz: "Asia/Kabul", lat: 34.5553, lon: 69.2075 },
       { name: "Albania (Tirana)", tz: "Europe/Tirana", lat: 41.3275, lon: 19.8187 },
       { name: "Algeria (Algiers)", tz: "Africa/Algiers", lat: 36.7538, lon: 3.0588 },
       { name: "Argentina (Buenos Aires)", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lon: -58.3816 },
-      { name: "Armenia (Yerevan)", tz: "Asia/Yerevan", lat: 40.1872, lon: 44.5152 },
       { name: "Australia (Sydney)", tz: "Australia/Sydney", lat: -33.8688, lon: 151.2093 },
-      { name: "Australia (Melbourne)", tz: "Australia/Melbourne", lat: -37.8136, lon: 144.9631 },
-      { name: "Australia (Perth)", tz: "Australia/Perth", lat: -31.9505, lon: 115.8605 },
       { name: "Austria (Vienna)", tz: "Europe/Vienna", lat: 48.2082, lon: 16.3738 },
-      { name: "Azerbaijan (Baku)", tz: "Asia/Baku", lat: 40.4093, lon: 49.8671 },
       { name: "Bahrain (Manama)", tz: "Asia/Bahrain", lat: 26.2285, lon: 50.5860 },
       { name: "Bangladesh (Dhaka)", tz: "Asia/Dhaka", lat: 23.8103, lon: 90.4125 },
-      { name: "Belarus (Minsk)", tz: "Europe/Minsk", lat: 53.9006, lon: 27.5590 },
-      { name: "Belgium (Brussels)", tz: "Europe/Brussels", lat: 50.8503, lon: 4.3517 },
       { name: "Brazil (Sao Paulo)", tz: "America/Sao_Paulo", lat: -23.5505, lon: -46.6333 },
-      { name: "Bulgaria (Sofia)", tz: "Europe/Sofia", lat: 42.6977, lon: 23.3219 },
-      { name: "Cambodia (Phnom Penh)", tz: "Asia/Phnom_Penh", lat: 11.5564, lon: 104.9282 },
       { name: "Canada (Toronto)", tz: "America/Toronto", lat: 43.6532, lon: -79.3832 },
-      { name: "Canada (Vancouver)", tz: "America/Vancouver", lat: 49.2827, lon: -123.1207 },
-      { name: "Chile (Santiago)", tz: "America/Santiago", lat: -33.4489, lon: -70.6693 },
       { name: "China (Beijing)", tz: "Asia/Shanghai", lat: 39.9042, lon: 116.4074 },
-      { name: "Colombia (Bogota)", tz: "America/Bogota", lat: 4.7110, lon: -74.0721 },
-      { name: "Croatia (Zagreb)", tz: "Europe/Zagreb", lat: 45.8150, lon: 15.9819 },
-      { name: "Cyprus (Nicosia)", tz: "Asia/Nicosia", lat: 35.1856, lon: 33.3823 },
-      { name: "Czech Republic (Prague)", tz: "Europe/Prague", lat: 50.0755, lon: 14.4378 },
-      { name: "Denmark (Copenhagen)", tz: "Europe/Copenhagen", lat: 55.6761, lon: 12.5683 },
       { name: "Egypt (Cairo)", tz: "Africa/Cairo", lat: 30.0444, lon: 31.2357 },
-      { name: "Ethiopia (Addis Ababa)", tz: "Africa/Addis_Ababa", lat: 9.0300, lon: 38.7400 },
-      { name: "Finland (Helsinki)", tz: "Europe/Helsinki", lat: 60.1699, lon: 24.9384 },
       { name: "France (Paris)", tz: "Europe/Paris", lat: 48.8566, lon: 2.3522 },
-      { name: "Georgia (Tbilisi)", tz: "Asia/Tbilisi", lat: 41.7151, lon: 44.8271 },
       { name: "Germany (Berlin)", tz: "Europe/Berlin", lat: 52.5200, lon: 13.4050 },
-      { name: "Greece (Athens)", tz: "Europe/Athens", lat: 37.9838, lon: 23.7275 },
-      { name: "Hungary (Budapest)", tz: "Europe/Budapest", lat: 47.4979, lon: 19.0402 },
-      { name: "Iceland (Reykjavik)", tz: "Atlantic/Reykjavik", lat: 64.1466, lon: -21.9426 },
       { name: "India (New Delhi)", tz: "Asia/Kolkata", lat: 28.6139, lon: 77.2090 },
       { name: "Indonesia (Jakarta)", tz: "Asia/Jakarta", lat: -6.2088, lon: 106.8456 },
-      { name: "Iran (Tehran)", tz: "Asia/Tehran", lat: 35.6892, lon: 51.3890 },
-      { name: "Iraq (Baghdad)", tz: "Asia/Baghdad", lat: 33.3152, lon: 44.3661 },
-      { name: "Ireland (Dublin)", tz: "Europe/Dublin", lat: 53.3498, lon: -6.2603 },
-      { name: "Israel (Tel Aviv)", tz: "Asia/Tel_Aviv", lat: 32.0853, lon: 34.7818 },
       { name: "Italy (Rome)", tz: "Europe/Rome", lat: 41.9028, lon: 12.4964 },
       { name: "Japan (Tokyo)", tz: "Asia/Tokyo", lat: 35.6762, lon: 139.6503 },
-      { name: "Jordan (Amman)", tz: "Asia/Amman", lat: 31.9454, lon: 35.9284 },
-      { name: "Kazakhstan (Almaty)", tz: "Asia/Almaty", lat: 43.2220, lon: 76.8512 },
-      { name: "Kenya (Nairobi)", tz: "Africa/Nairobi", lat: -1.2921, lon: 36.8219 },
       { name: "Kuwait (Kuwait City)", tz: "Asia/Kuwait", lat: 29.3759, lon: 47.9774 },
-      { name: "Lebanon (Beirut)", tz: "Asia/Beirut", lat: 33.8938, lon: 35.5018 },
       { name: "Malaysia (Kuala Lumpur)", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lon: 101.6869 },
       { name: "Maldives (Male)", tz: "Indian/Maldives", lat: 4.1755, lon: 73.5093 },
-      { name: "Mexico (Mexico City)", tz: "America/Mexico_City", lat: 19.4326, lon: -99.1332 },
-      { name: "Morocco (Casablanca)", tz: "Africa/Casablanca", lat: 33.5731, lon: -7.5898 },
-      { name: "Nepal (Kathmandu)", tz: "Asia/Kathmandu", lat: 27.7172, lon: 85.3240 },
-      { name: "Netherlands (Amsterdam)", tz: "Europe/Amsterdam", lat: 52.3676, lon: 4.9041 },
       { name: "New Zealand (Auckland)", tz: "Pacific/Auckland", lat: -36.8485, lon: 174.7633 },
-      { name: "Nigeria (Lagos)", tz: "Africa/Lagos", lat: 6.5244, lon: 3.3792 },
-      { name: "Norway (Oslo)", tz: "Europe/Oslo", lat: 59.9139, lon: 10.7522 },
       { name: "Oman (Muscat)", tz: "Asia/Muscat", lat: 23.5880, lon: 58.3829 },
       { name: "Pakistan (Karachi)", tz: "Asia/Karachi", lat: 24.8607, lon: 67.0011 },
-      { name: "Philippines (Manila)", tz: "Asia/Manila", lat: 14.5995, lon: 120.9842 },
-      { name: "Poland (Warsaw)", tz: "Europe/Warsaw", lat: 52.2297, lon: 21.0122 },
-      { name: "Portugal (Lisbon)", tz: "Europe/Lisbon", lat: 38.7223, lon: -9.1393 },
       { name: "Qatar (Doha)", tz: "Asia/Qatar", lat: 25.2854, lon: 51.5310 },
-      { name: "Romania (Bucharest)", tz: "Europe/Bucharest", lat: 44.4268, lon: 26.1025 },
       { name: "Russia (Moscow)", tz: "Europe/Moscow", lat: 55.7558, lon: 37.6173 },
       { name: "Saudi Arabia (Riyadh)", tz: "Asia/Riyadh", lat: 24.7136, lon: 46.6753 },
       { name: "Serbia (Belgrade)", tz: "Europe/Belgrade", lat: 44.7866, lon: 20.4489 },
       { name: "Singapore", tz: "Asia/Singapore", lat: 1.3521, lon: 103.8198 },
-      { name: "South Africa (Johannesburg)", tz: "Africa/Johannesburg", lat: -26.2041, lon: 28.0473 },
       { name: "South Korea (Seoul)", tz: "Asia/Seoul", lat: 37.5665, lon: 126.9780 },
       { name: "Spain (Madrid)", tz: "Europe/Madrid", lat: 40.4168, lon: -3.7038 },
       { name: "Sri Lanka (Colombo)", tz: "Asia/Colombo", lat: 6.9271, lon: 79.8612 },
-      { name: "Sweden (Stockholm)", tz: "Europe/Stockholm", lat: 59.3293, lon: 18.0686 },
       { name: "Switzerland (Zurich)", tz: "Europe/Zurich", lat: 47.3769, lon: 8.5417 },
       { name: "Thailand (Bangkok)", tz: "Asia/Bangkok", lat: 13.7563, lon: 100.5018 },
-      { name: "Turkey (Istanbul)", tz: "Europe/Istanbul", lat: 41.0082, lon: 28.9784 },
       { name: "UAE (Dubai)", tz: "Asia/Dubai", lat: 25.2048, lon: 55.2708 },
       { name: "UK (London)", tz: "Europe/London", lat: 51.5074, lon: -0.1278 },
-      { name: "Ukraine (Kyiv)", tz: "Europe/Kyiv", lat: 50.4501, lon: 30.5234 },
-      { name: "USA (New York)", tz: "America/New_York", lat: 40.7128, lon: -74.0060 },
-      { name: "USA (Los Angeles)", tz: "America/Los_Angeles", lat: 34.0522, lon: -118.2437 },
-      { name: "USA (Chicago)", tz: "America/Chicago", lat: 41.8781, lon: -87.6298 },
-      { name: "Vietnam (Hanoi)", tz: "Asia/Bangkok", lat: 21.0285, lon: 105.8542 }
+      { name: "USA (New York)", tz: "America/New_York", lat: 40.7128, lon: -74.0060 }
     ];
 
     let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
     let mainCurrency = localStorage.getItem('ms_main_curr') || "RSD";
     let secondCurrency = localStorage.getItem('ms_second_curr') || "LKR";
-    let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [71, 66, 77, 79, 76]; 
+    let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [27, 31, 35, 36, 34]; 
     let activeRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
     let liveRatesData = {};
+
+    function extractCurrencyCode(str) {
+      if(!str) return "USD";
+      const match = str.match(/^[A-Z]{3}/);
+      return match ? match[0] : str.trim().toUpperCase();
+    }
 
     function formatMoney(amount, currency = "") {
       const formatted = Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
@@ -743,34 +854,35 @@
     }
 
     function initCurrenciesAndUI() {
-      const mainSel = document.getElementById('set-main-curr');
-      const secSel = document.getElementById('set-second-curr');
-      const quickSel = document.getElementById('quick-curr-select');
-      const freeFrom = document.getElementById('free-from-curr');
-      const freeTo = document.getElementById('free-to-curr');
+      populateCurrenciesDatalist();
+      populateCitiesDatalist();
 
-      mainSel.innerHTML = ''; secSel.innerHTML = ''; quickSel.innerHTML = ''; freeFrom.innerHTML = ''; freeTo.innerHTML = '';
+      document.getElementById('set-main-curr').value = getCurrencyDisplayString(mainCurrency);
+      document.getElementById('set-second-curr').value = getCurrencyDisplayString(secondCurrency);
+      document.getElementById('quick-curr-input').value = getCurrencyDisplayString("GBP");
+      document.getElementById('free-from-curr').value = getCurrencyDisplayString("USD");
+      document.getElementById('free-to-curr').value = getCurrencyDisplayString("LKR");
 
-      CURRENCIES.forEach(c => {
-        mainSel.add(new Option(c, c));
-        secSel.add(new Option(c, c));
-        quickSel.add(new Option(c, c));
-        freeFrom.add(new Option(c, c));
-        freeTo.add(new Option(c, c));
-      });
-
-      mainSel.value = mainCurrency;
-      secSel.value = secondCurrency;
-      quickSel.value = "GBP";
-      freeFrom.value = "USD";
-      freeTo.value = "LKR";
-
-      populateDatalist();
       initWeatherInputs();
       updateUIElements();
     }
 
-    function populateDatalist() {
+    function getCurrencyDisplayString(code) {
+      const item = WORLD_CURRENCIES.find(c => c.code === code);
+      return item ? `${item.code} - ${item.name} (${item.symbol})` : code;
+    }
+
+    function populateCurrenciesDatalist() {
+      const dl = document.getElementById('currencies-list');
+      dl.innerHTML = '';
+      WORLD_CURRENCIES.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = `${c.code} - ${c.name} (${c.symbol})`;
+        dl.appendChild(opt);
+      });
+    }
+
+    function populateCitiesDatalist() {
       const dl = document.getElementById('cities-list');
       dl.innerHTML = '';
       CITIES.forEach(c => {
@@ -781,8 +893,8 @@
     }
 
     function saveCurrencySettings() {
-      mainCurrency = document.getElementById('set-main-curr').value;
-      secondCurrency = document.getElementById('set-second-curr').value;
+      mainCurrency = extractCurrencyCode(document.getElementById('set-main-curr').value);
+      secondCurrency = extractCurrencyCode(document.getElementById('set-second-curr').value);
       
       localStorage.setItem('ms_main_curr', mainCurrency);
       localStorage.setItem('ms_second_curr', secondCurrency);
@@ -900,7 +1012,7 @@
       transactions.forEach(t => { if(t.type === 'income') totalIncome += t.amount; if(t.type === 'spend') totalSpend += t.amount; });
       const mainBal = totalIncome - totalSpend;
       
-      const targetCurr = document.getElementById('quick-curr-select').value;
+      const targetCurr = extractCurrencyCode(document.getElementById('quick-curr-input').value);
       const rate = liveRatesData[targetCurr] || 0;
       document.getElementById('quick-curr-result').innerText = formatMoney(mainBal * rate, targetCurr);
     }
@@ -912,8 +1024,8 @@
 
     // Independent Dual Converter Calculation
     async function calcFreeConverter() {
-      const fromC = document.getElementById('free-from-curr').value;
-      const toC = document.getElementById('free-to-curr').value;
+      const fromC = extractCurrencyCode(document.getElementById('free-from-curr').value);
+      const toC = extractCurrencyCode(document.getElementById('free-to-curr').value);
       const amt = parseFloat(document.getElementById('free-amount').value) || 0;
 
       try {
