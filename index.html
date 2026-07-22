@@ -423,7 +423,7 @@
           <select class="city-select" onchange="updateCity(0, this.value)"></select>
           <div class="weather-txt" id="w-temp-0">Loading weather...</div>
         </div>
-        <div class="time-txt" id="w-time-0">--:--:--</div>
+        <div class="time-txt" id="w-time-0">--:--:-- --</div>
       </div>
 
       <div class="weather-card" id="w-card-1">
@@ -431,7 +431,7 @@
           <select class="city-select" onchange="updateCity(1, this.value)"></select>
           <div class="weather-txt" id="w-temp-1">Loading weather...</div>
         </div>
-        <div class="time-txt" id="w-time-1">--:--:--</div>
+        <div class="time-txt" id="w-time-1">--:--:-- --</div>
       </div>
 
       <div class="weather-card" id="w-card-2">
@@ -439,7 +439,7 @@
           <select class="city-select" onchange="updateCity(2, this.value)"></select>
           <div class="weather-txt" id="w-temp-2">Loading weather...</div>
         </div>
-        <div class="time-txt" id="w-time-2">--:--:--</div>
+        <div class="time-txt" id="w-time-2">--:--:-- --</div>
       </div>
 
       <div class="weather-card" id="w-card-3">
@@ -447,7 +447,7 @@
           <select class="city-select" onchange="updateCity(3, this.value)"></select>
           <div class="weather-txt" id="w-temp-3">Loading weather...</div>
         </div>
-        <div class="time-txt" id="w-time-3">--:--:--</div>
+        <div class="time-txt" id="w-time-3">--:--:-- --</div>
       </div>
 
       <div class="weather-card" id="w-card-4">
@@ -455,7 +455,7 @@
           <select class="city-select" onchange="updateCity(4, this.value)"></select>
           <div class="weather-txt" id="w-temp-4">Loading weather...</div>
         </div>
-        <div class="time-txt" id="w-time-4">--:--:--</div>
+        <div class="time-txt" id="w-time-4">--:--:-- --</div>
       </div>
     </div>
   </div>
@@ -836,7 +836,7 @@
       } catch(e) { console.log(e); }
     }
 
-    // Live Clocks & Weather
+    // Live Clocks & Weather (12-Hour Format with AM/PM & Seconds)
     function initWeatherCitySelectors() {
       for(let i=0; i<5; i++) {
         const sel = document.querySelectorAll('.city-select')[i];
@@ -860,7 +860,13 @@
       for(let i=0; i<5; i++) {
         const cityObj = CITIES[selectedCities[i]];
         if(cityObj) {
-          const timeStr = new Date().toLocaleTimeString('en-US', { timeZone: cityObj.tz, hour12: false });
+          const timeStr = new Date().toLocaleTimeString('en-US', { 
+            timeZone: cityObj.tz, 
+            hour12: true, 
+            hour: '2-digit', 
+            minute: '2-digit', 
+            second: '2-digit' 
+          });
           document.getElementById(`w-time-${i}`).innerText = timeStr;
         }
       }
