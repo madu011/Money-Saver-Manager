@@ -2,93 +2,81 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MoneySaver</title>
-
-  <!-- Dynamic Web Icon & PWA Integration -->
+  
+  <!-- App Icons & PWA Config -->
   <link rel="icon" type="image/png" href="1784723411245~2 (1).png">
   <link rel="apple-touch-icon" href="1784723411245~2 (1).png">
-  <meta name="theme-color" content="#0a0a0c">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
 
   <style>
-    /* --- CSS RESET & VARIABLES --- */
     :root {
-      --bg-color: #0a0a0c;
-      --card-bg: #141419;
-      --card-border: #22222a;
+      --bg: #0a0a0a;
+      --card-bg: #141414;
+      --border: #262626;
       --text-main: #ffffff;
-      --text-muted: #8e8e93;
-      --accent-green: #2ecc71;
-      --accent-red: #e74c3c;
-      --nav-bg: #121217;
-      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --text-muted: #888888;
+      --green: #22c55e;
+      --red: #ef4444;
+      --accent-white: #ffffff;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       -webkit-tap-highlight-color: transparent;
     }
 
     body {
-      background-color: var(--bg-color);
+      background-color: var(--bg);
       color: var(--text-main);
-      font-family: var(--font-family);
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
-      padding-bottom: 90px; /* Space for floating nav */
+      min-height: 100vh;
+      max-width: 480px;
+      margin: 0 auto;
+      padding-bottom: 70px;
     }
 
-    /* --- HEADER --- */
+    /* Top Header */
     header {
-      padding: 20px 24px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--card-border);
-      background: rgba(10, 10, 12, 0.8);
+      padding: 16px;
+      text-align: center;
+      background: rgba(10, 10, 10, 0.8);
       backdrop-filter: blur(10px);
       position: sticky;
       top: 0;
       z-index: 10;
-    }
-
-    .brand {
+      border-bottom: 1px solid var(--border);
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 12px;
     }
 
-    .brand img {
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      object-fit: cover;
+    .app-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
     }
 
-    .brand h1 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      letter-spacing: -0.5px;
+    .currency-badge {
+      font-size: 0.75rem;
+      background: #222;
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
     }
 
-    /* --- PANELS & VIEWS --- */
-    main {
-      padding: 20px;
-      flex: 1;
-      max-width: 500px;
-      width: 100%;
-      margin: 0 auto;
-    }
-
+    /* Tab Panels */
     .panel {
       display: none;
-      animation: fadeIn 0.25s ease-in-out;
+      padding: 20px;
+      animation: fadeIn 0.2s ease-in-out;
     }
 
     .panel.active {
@@ -96,47 +84,43 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* --- DASHBOARD PANEL --- */
-    .dashboard-hero {
+    /* Main Balance Card */
+    .balance-card {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 32px 20px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 30px 20px;
       text-align: center;
-      margin-top: 15px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      margin-top: 20px;
     }
 
-    .balance-title {
+    .balance-label {
       font-size: 0.85rem;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
       color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1px;
       margin-bottom: 8px;
     }
 
     .balance-amount {
-      font-size: 2.75rem;
+      font-size: 2.5rem;
       font-weight: 800;
       color: var(--text-main);
-      letter-spacing: -1px;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
 
-    .analytics-row {
+    .stats-row {
       display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 20px;
-      padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      justify-content: space-around;
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
     }
 
-    .analytic-item {
+    .stat-item {
       display: flex;
       align-items: center;
       gap: 6px;
@@ -144,171 +128,136 @@
       font-weight: 600;
     }
 
-    .percent-green { color: var(--accent-green); }
-    .percent-red { color: var(--accent-red); }
+    .stat-green { color: var(--green); }
+    .stat-red { color: var(--red); }
 
-    /* --- CARDS & FORM ELEMENTS --- */
-    .card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-    }
-
-    .card-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 16px;
-    }
-
+    /* Forms & Inputs */
     .form-group {
       margin-bottom: 16px;
     }
 
-    .form-group label {
+    label {
       display: block;
       font-size: 0.8rem;
       color: var(--text-muted);
       margin-bottom: 6px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
     }
 
-    .form-control {
+    input, textarea, select {
       width: 100%;
-      padding: 14px 16px;
-      background: #0f0f13;
-      border: 1px solid var(--card-border);
+      padding: 12px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 10px;
       color: var(--text-main);
       font-size: 1rem;
-      font-family: inherit;
       outline: none;
-      transition: border-color 0.2s;
     }
 
-    .form-control:focus {
-      border-color: #444455;
+    input:focus, textarea:focus {
+      border-color: #555;
     }
 
     .btn {
       width: 100%;
-      padding: 16px;
+      padding: 14px;
+      border-radius: 10px;
       border: none;
-      border-radius: 12px;
-      font-size: 1rem;
       font-weight: 700;
+      font-size: 1rem;
       cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
+      background: #ffffff;
+      color: #000000;
+      margin-top: 10px;
     }
 
-    .btn:active {
-      transform: scale(0.98);
-    }
-
-    .btn-income {
-      background: var(--accent-green);
-      color: #000;
-    }
-
-    .btn-spend {
-      background: var(--accent-red);
-      color: #fff;
-    }
-
-    .btn-neutral {
-      background: #2a2a35;
-      color: #fff;
-    }
-
-    /* --- HISTORY PANEL --- */
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .transaction-list {
+    /* History List */
+    .history-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
+      margin-top: 15px;
     }
 
-    .transaction-item {
+    .history-item {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
+      border: 1px solid var(--border);
+      padding: 14px;
       border-radius: 12px;
-      padding: 16px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       cursor: pointer;
-      transition: background 0.2s;
     }
 
-    .transaction-item:hover {
-      background: #1a1a22;
-    }
-
-    .tx-info {
-      display: flex;
-      flex-direction: column;
-      gap: 4px;
+    .history-info {
       max-width: 65%;
     }
 
-    .tx-note {
-      color: var(--text-main) !important; /* Strict white text for notes */
-      font-weight: 500;
+    .history-note {
       font-size: 0.95rem;
+      color: var(--text-main);
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .tx-date {
-      color: var(--text-muted);
+    .history-date {
       font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    .tx-amount {
+    .history-amount {
+      font-weight: 700;
       font-size: 1.05rem;
-      font-weight: 700;
-      text-align: right;
     }
 
-    .tx-amount.income { color: var(--accent-green); }
-    .tx-amount.expense { color: var(--accent-red); }
-
-    /* --- CONVERTER PANEL --- */
-    .converted-box {
-      text-align: center;
-      padding: 20px;
-      background: #0f0f13;
+    /* Convertor Panel Cards */
+    .calc-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 12px;
-      border: 1px solid var(--card-border);
-      margin-top: 10px;
+      padding: 16px;
+      margin-bottom: 15px;
     }
 
-    .converted-value {
-      font-size: 1.8rem;
+    .calc-title {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+
+    .calc-result {
+      font-size: 1.4rem;
       font-weight: 700;
-      color: var(--accent-green);
-      margin-top: 6px;
+      color: var(--text-main);
     }
 
-    /* --- FLOATING BOTTOM NAVIGATION --- */
+    /* Footer Branding */
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      margin-top: auto;
+    }
+
+    /* Bottom Nav Bar */
     .bottom-nav {
       position: fixed;
       bottom: 0;
-      left: 0;
-      right: 0;
-      background: var(--nav-bg);
-      border-top: 1px solid var(--card-border);
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      max-width: 480px;
+      background: rgba(15, 15, 15, 0.9);
+      backdrop-filter: blur(10px);
+      border-top: 1px solid var(--border);
       display: flex;
       justify-content: space-around;
-      padding: 12px 8px 24px; /* Extra bottom padding for iOS/Android nav bars */
+      padding: 10px 0;
       z-index: 100;
     }
 
@@ -316,66 +265,50 @@
       background: none;
       border: none;
       color: var(--text-muted);
+      font-size: 0.7rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
       cursor: pointer;
-      flex: 1;
-    }
-
-    .nav-item svg {
-      width: 22px;
-      height: 22px;
-      fill: currentColor;
+      width: 20%;
     }
 
     .nav-item.active {
       color: var(--text-main);
     }
 
-    .nav-item.btn-add-inc { color: var(--accent-green); }
-    .nav-item.btn-add-exp { color: var(--accent-red); }
+    .nav-icon {
+      font-size: 1.2rem;
+    }
 
-    /* --- MODAL DIALOG --- */
-    .modal-overlay {
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(5px);
+    /* Modal Popup for Notes */
+    .modal {
       display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      backdrop-filter: blur(5px);
+      z-index: 200;
       justify-content: center;
       align-items: center;
-      z-index: 200;
       padding: 20px;
     }
 
-    .modal-overlay.active {
-      display: flex;
-    }
-
-    .modal-card {
+    .modal-content {
       background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 20px;
-      padding: 24px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
       width: 100%;
       max-width: 400px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .modal-title {
-      font-size: 1.1rem;
-      font-weight: 700;
+      margin-bottom: 15px;
     }
 
     .modal-close {
@@ -386,412 +319,324 @@
       cursor: pointer;
     }
 
-    .modal-body {
+    .full-note {
       color: var(--text-main);
-      font-size: 0.95rem;
+      font-size: 1rem;
       line-height: 1.5;
       word-break: break-word;
-      margin-bottom: 20px;
-    }
-
-    .modal-meta {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid var(--card-border);
-    }
-
-    .empty-state {
-      text-align: center;
-      color: var(--text-muted);
-      padding: 40px 0;
-      font-size: 0.9rem;
+      margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
 
-  <!-- TOP HEADER -->
+  <!-- App Header -->
   <header>
-    <div class="brand">
-      <img src="1784723411245~2 (1).png" alt="Logo" onerror="this.style.display='none'">
-      <h1>MoneySaver</h1>
-    </div>
+    <div class="app-title">MoneySaver</div>
+    <div class="currency-badge">RSD Main</div>
   </header>
 
-  <!-- MAIN CONTAINER FOR PANELS -->
-  <main>
-
-    <!-- 1. DASHBOARD PANEL -->
-    <section id="panel-home" class="panel active">
-      <div class="dashboard-hero">
-        <div class="balance-title">Current Balance</div>
-        <div class="balance-amount" id="dash-balance">0.00 RSD</div>
-        
-        <div class="analytics-row">
-          <div class="analytic-item percent-green">
-            <span>▲</span>
-            <span id="dash-inc-pct">0%</span>
-            <span style="color: var(--text-muted); font-size: 0.75rem;">Income</span>
-          </div>
-          <div style="color: var(--card-border);">|</div>
-          <div class="analytic-item percent-red">
-            <span>▼</span>
-            <span id="dash-exp-pct">0%</span>
-            <span style="color: var(--text-muted); font-size: 0.75rem;">Expense</span>
-          </div>
+  <!-- Panel 1: Home / Balance -->
+  <div id="home-panel" class="panel active">
+    <div class="balance-card">
+      <div class="balance-label">Total Balance</div>
+      <div class="balance-amount" id="main-balance">0.00 RSD</div>
+      
+      <div class="stats-row">
+        <div class="stat-item stat-green">
+          <span>▲</span> <span id="income-pct">0%</span> Income
+        </div>
+        <div class="stat-item stat-red">
+          <span>▼</span> <span id="expense-pct">0%</span> Spend
         </div>
       </div>
-    </section>
-
-    <!-- 2. ADD INCOME PANEL -->
-    <section id="panel-add-income" class="panel">
-      <div class="card">
-        <h2 class="card-title" style="color: var(--accent-green);">Add Income (+)</h2>
-        <form id="form-income">
-          <div class="form-group">
-            <label>Amount (RSD)</label>
-            <input type="number" step="0.01" class="form-control" id="inc-amount" placeholder="0.00" required>
-          </div>
-          <div class="form-group">
-            <label>Note / Description</label>
-            <input type="text" class="form-control" id="inc-note" placeholder="Salary, Bonus, Side project..." required>
-          </div>
-          <div class="form-group">
-            <label>Date & Time</label>
-            <input type="datetime-local" class="form-control" id="inc-date" required>
-          </div>
-          <button type="submit" class="btn btn-income">Save Income</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- 3. SPEND PANEL -->
-    <section id="panel-add-spend" class="panel">
-      <div class="card">
-        <h2 class="card-title" style="color: var(--accent-red);">Spend Money (-)</h2>
-        <form id="form-spend">
-          <div class="form-group">
-            <label>Amount (RSD)</label>
-            <input type="number" step="0.01" class="form-control" id="exp-amount" placeholder="0.00" required>
-          </div>
-          <div class="form-group">
-            <label>Note / Description</label>
-            <input type="text" class="form-control" id="exp-note" placeholder="Groceries, Rent, Utilities..." required>
-          </div>
-          <div class="form-group">
-            <label>Date & Time</label>
-            <input type="datetime-local" class="form-control" id="exp-date" required>
-          </div>
-          <button type="submit" class="btn btn-spend">Record Expense</button>
-        </form>
-      </div>
-    </section>
-
-    <!-- 4. HISTORY PANEL -->
-    <section id="panel-history" class="panel">
-      <div class="filter-bar">
-        <select class="form-control" id="filter-type" onchange="renderHistory()">
-          <option value="ALL">All Types</option>
-          <option value="INCOME">Income Only (+)</option>
-          <option value="EXPENSE">Expense Only (-)</option>
-        </select>
-        <input type="date" class="form-control" id="filter-date" onchange="renderHistory()">
-      </div>
-
-      <div class="transaction-list" id="tx-container">
-        <!-- Records injected here -->
-      </div>
-    </section>
-
-    <!-- 5. CURRENCY RATES PANEL -->
-    <section id="panel-rates" class="panel">
-      <div class="card">
-        <h2 class="card-title">Live Rate Configuration</h2>
-        <div class="form-group">
-          <label>Manual Exchange Rate (1 RSD = ? LKR)</label>
-          <input type="number" step="0.0001" class="form-control" id="exchange-rate-input" placeholder="e.g. 2.75">
-        </div>
-        <button class="btn btn-neutral" onclick="saveExchangeRate()">Update Rate</button>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">Total Balance in LKR</h2>
-        <div class="converted-box">
-          <div style="color: var(--text-muted); font-size: 0.8rem;">CONVERTED VALUE</div>
-          <div class="converted-value" id="lkr-balance-display">0.00 LKR</div>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2 class="card-title">Custom Calculator</h2>
-        <div class="form-group">
-          <label>Amount in RSD</label>
-          <input type="number" step="0.01" class="form-control" id="calc-rsd" placeholder="0.00" oninput="calculateConversion()">
-        </div>
-        <div class="converted-box">
-          <div style="color: var(--text-muted); font-size: 0.8rem;">EQUIVALENT IN LKR</div>
-          <div class="converted-value" id="calc-lkr-result">0.00 LKR</div>
-        </div>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- DETAIL MODAL FOR LONG NOTES -->
-  <div class="modal-overlay" id="tx-modal">
-    <div class="modal-card">
-      <div class="modal-header">
-        <div class="modal-title" id="modal-type-title">Transaction Details</div>
-        <button class="modal-close" onclick="closeModal()">&times;</button>
-      </div>
-      <div style="margin-bottom: 12px; font-weight: 700; font-size: 1.4rem;" id="modal-amount"></div>
-      <div class="modal-body" id="modal-note-body"></div>
-      <div class="modal-meta" id="modal-timestamp"></div>
-      <button class="btn btn-neutral" style="margin-top: 16px;" onclick="deleteCurrentTx()">Delete Record</button>
     </div>
   </div>
 
-  <!-- FIXED BOTTOM NAVIGATION BAR -->
+  <!-- Panel 2: Add Income -->
+  <div id="income-panel" class="panel">
+    <h3>Add Income (+)</h3>
+    <br>
+    <form id="income-form">
+      <div class="form-group">
+        <label>Amount (RSD)</label>
+        <input type="number" id="inc-amount" step="any" placeholder="0.00" required>
+      </div>
+      <div class="form-group">
+        <label>Note / Description (Required)</label>
+        <textarea id="inc-note" rows="3" placeholder="Where did you earn this?" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Date & Time</label>
+        <input type="datetime-local" id="inc-date" required>
+      </div>
+      <button type="submit" class="btn" style="background: var(--green); color: #fff;">Save Income</button>
+    </form>
+  </div>
+
+  <!-- Panel 3: Add Spend -->
+  <div id="spend-panel" class="panel">
+    <h3>Add Expense (-)</h3>
+    <br>
+    <form id="spend-form">
+      <div class="form-group">
+        <label>Amount (RSD)</label>
+        <input type="number" id="exp-amount" step="any" placeholder="0.00" required>
+      </div>
+      <div class="form-group">
+        <label>Note / Description (Required)</label>
+        <textarea id="exp-note" rows="3" placeholder="What was this spent on?" required></textarea>
+      </div>
+      <div class="form-group">
+        <label>Date & Time</label>
+        <input type="datetime-local" id="exp-date" required>
+      </div>
+      <button type="submit" class="btn" style="background: var(--red); color: #fff;">Save Expense</button>
+    </form>
+  </div>
+
+  <!-- Panel 4: History -->
+  <div id="history-panel" class="panel">
+    <h3>Transaction History</h3>
+    <br>
+    <div class="form-group">
+      <input type="date" id="history-filter" onchange="renderHistory()">
+    </div>
+    <div class="history-list" id="history-container">
+      <!-- Items dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Panel 5: Currency Converter -->
+  <div id="rates-panel" class="panel">
+    <h3>RSD to LKR Rates</h3>
+    <br>
+    <div class="calc-card">
+      <div class="form-group">
+        <label>1 RSD = ? LKR (Manual Rate Set)</label>
+        <input type="number" id="exchange-rate" step="any" placeholder="e.g. 2.85" oninput="saveRate()">
+      </div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-title">Main Balance in Sri Lankan Rupees</div>
+      <div class="calc-result" id="lkr-total-balance">0.00 LKR</div>
+    </div>
+
+    <div class="calc-card">
+      <div class="calc-title">Custom Custom Converter</div>
+      <div class="form-group">
+        <input type="number" id="custom-rsd" placeholder="Enter RSD Amount" oninput="calcCustom()">
+      </div>
+      <div class="calc-result" id="custom-lkr-result">0.00 LKR</div>
+    </div>
+  </div>
+
+  <!-- Footer Branding -->
+  <footer>
+    Made by Madhuranga Yasanath
+  </footer>
+
+  <!-- Bottom Navigation -->
   <nav class="bottom-nav">
-    <button class="nav-item active" onclick="switchPanel('home', this)">
-      <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-      Home
+    <button class="nav-item active" onclick="switchTab('home-panel', this)">
+      <span class="nav-icon">💳</span>
+      <span>Home</span>
     </button>
-    <button class="nav-item btn-add-inc" onclick="switchPanel('add-income', this)">
-      <svg viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
-      Income
+    <button class="nav-item" onclick="switchTab('income-panel', this)">
+      <span class="nav-icon">📈</span>
+      <span>Add</span>
     </button>
-    <button class="nav-item btn-add-exp" onclick="switchPanel('add-spend', this)">
-      <svg viewBox="0 0 24 24"><path d="M19 13H5v-2h14v2z"/></svg>
-      Spend
+    <button class="nav-item" onclick="switchTab('spend-panel', this)">
+      <span class="nav-icon">📉</span>
+      <span>Spend</span>
     </button>
-    <button class="nav-item" onclick="switchPanel('history', this)">
-      <svg viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-      History
+    <button class="nav-item" onclick="switchTab('history-panel', this)">
+      <span class="nav-icon">📜</span>
+      <span>History</span>
     </button>
-    <button class="nav-item" onclick="switchPanel('rates', this)">
-      <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-      Rates
+    <button class="nav-item" onclick="switchTab('rates-panel', this)">
+      <span class="nav-icon">💱</span>
+      <span>Rates</span>
     </button>
   </nav>
 
-  <!-- JAVASCRIPT APPLICATION LOGIC -->
-  <script>
-    /* --- STATE MANAGEMENT & LOCAL STORAGE --- */
-    let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
-    let exchangeRate = parseFloat(localStorage.getItem('ms_exchange_rate')) || 2.75; // Default rate RSD to LKR
-    let activeModalTxId = null;
+  <!-- Note Details Modal -->
+  <div class="modal" id="note-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="modal-type">Details</h4>
+        <button class="modal-close" onclick="closeModal()">&times;</button>
+      </div>
+      <div class="full-note" id="modal-note"></div>
+      <div style="font-size: 0.8rem; color: var(--text-muted);" id="modal-date"></div>
+      <div style="font-size: 1.2rem; font-weight: 700; margin-top: 10px;" id="modal-amount"></div>
+    </div>
+  </div>
 
-    // Initialize Default Dates to Now
-    function resetFormDates() {
+  <script>
+    // LocalStorage Setup
+    let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
+    let rsdRate = parseFloat(localStorage.getItem('ms_rsd_rate')) || 0;
+
+    // Set Default Datetime
+    function setNowDate() {
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      const formatted = now.toISOString().slice(0, 16);
+      const formatted = now.toISOString().slice(0,16);
       document.getElementById('inc-date').value = formatted;
       document.getElementById('exp-date').value = formatted;
     }
 
-    /* --- NAVIGATION SYSTEM --- */
-    function switchPanel(panelId, element) {
+    // Switch Tabs
+    function switchTab(panelId, btnElement) {
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-
-      document.getElementById(`panel-${panelId}`).classList.add('active');
-      if (element) element.classList.add('active');
-
-      if (panelId === 'history') renderHistory();
-      if (panelId === 'rates') updateRatesPanel();
-      if (panelId === 'home') updateDashboard();
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      document.getElementById(panelId).classList.add('active');
+      btnElement.classList.add('active');
+      if(panelId === 'home-panel') updateDashboard();
+      if(panelId === 'history-panel') renderHistory();
+      if(panelId === 'rates-panel') updateRatesPanel();
     }
 
-    /* --- CALCULATIONS & DASHBOARD --- */
+    // Add Income
+    document.getElementById('income-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('inc-amount').value);
+      const note = document.getElementById('inc-note').value;
+      const date = document.getElementById('inc-date').value;
+
+      transactions.push({ id: Date.now(), type: 'income', amount, note, date });
+      saveData();
+      e.target.reset();
+      setNowDate();
+      alert('Income added!');
+      switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
+    });
+
+    // Add Spend
+    document.getElementById('spend-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const amount = parseFloat(document.getElementById('exp-amount').value);
+      const note = document.getElementById('exp-note').value;
+      const date = document.getElementById('exp-date').value;
+
+      transactions.push({ id: Date.now(), type: 'spend', amount, note, date });
+      saveData();
+      e.target.reset();
+      setNowDate();
+      alert('Expense recorded!');
+      switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
+    });
+
+    // Calculate Balance & Analysis
     function updateDashboard() {
       let totalIncome = 0;
-      let totalExpense = 0;
+      let totalSpend = 0;
 
       transactions.forEach(t => {
-        if (t.type === 'INCOME') totalIncome += t.amount;
-        if (t.type === 'EXPENSE') totalExpense += t.amount;
+        if(t.type === 'income') totalIncome += t.amount;
+        if(t.type === 'spend') totalSpend += t.amount;
       });
 
-      const balance = totalIncome - totalExpense;
-      document.getElementById('dash-balance').textContent = `${balance.toFixed(2)} RSD`;
+      const mainBalance = totalIncome - totalSpend;
+      document.getElementById('main-balance').innerText = `${mainBalance.toFixed(2)} RSD`;
 
-      // Calculate Ratios
-      const combinedTotal = totalIncome + totalExpense;
-      let incPct = 0;
-      let expPct = 0;
+      const totalFlow = totalIncome + totalSpend;
+      const incPct = totalFlow > 0 ? Math.round((totalIncome / totalFlow) * 100) : 0;
+      const expPct = totalFlow > 0 ? Math.round((totalSpend / totalFlow) * 100) : 0;
 
-      if (combinedTotal > 0) {
-        incPct = Math.round((totalIncome / combinedTotal) * 100);
-        expPct = Math.round((totalExpense / combinedTotal) * 100);
-      }
-
-      document.getElementById('dash-inc-pct').textContent = `${incPct}%`;
-      document.getElementById('dash-exp-pct').textContent = `${expPct}%`;
+      document.getElementById('income-pct').innerText = `${incPct}%`;
+      document.getElementById('expense-pct').innerText = `${expPct}%`;
     }
 
-    /* --- FORM SUBMISSIONS --- */
-    document.getElementById('form-income').addEventListener('submit', (e) => {
-      e.preventDefault();
-      addTransaction('INCOME', 'inc-amount', 'inc-note', 'inc-date');
-    });
-
-    document.getElementById('form-spend').addEventListener('submit', (e) => {
-      e.preventDefault();
-      addTransaction('EXPENSE', 'exp-amount', 'exp-note', 'exp-date');
-    });
-
-    function addTransaction(type, amountId, noteId, dateId) {
-      const amount = parseFloat(document.getElementById(amountId).value);
-      const note = document.getElementById(noteId).value.trim();
-      const dateVal = document.getElementById(dateId).value;
-
-      if (!amount || !note || !dateVal) return;
-
-      const newTx = {
-        id: Date.now().toString(),
-        type,
-        amount,
-        note,
-        date: dateVal
-      };
-
-      transactions.unshift(newTx);
-      saveState();
-
-      // Reset Forms
-      document.getElementById(amountId).value = '';
-      document.getElementById(noteId).value = '';
-      resetFormDates();
-
-      // Return to Home Panel
-      updateDashboard();
-      switchPanel('home', document.querySelectorAll('.nav-item')[0]);
-    }
-
-    /* --- HISTORY & LONG NOTE HANDLING --- */
+    // Render History List
     function renderHistory() {
-      const container = document.getElementById('tx-container');
-      const filterType = document.getElementById('filter-type').value;
-      const filterDate = document.getElementById('filter-date').value;
+      const container = document.getElementById('history-container');
+      const filterDate = document.getElementById('history-filter').value;
+      container.innerHTML = '';
 
       let filtered = transactions;
-
-      if (filterType !== 'ALL') {
-        filtered = filtered.filter(t => t.type === filterType);
+      if(filterDate) {
+        filtered = transactions.filter(t => t.date.startsWith(filterDate));
       }
 
-      if (filterDate) {
-        filtered = filtered.filter(t => t.date.startsWith(filterDate));
-      }
+      filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-      if (filtered.length === 0) {
-        container.innerHTML = `<div class="empty-state">No transaction records found.</div>`;
+      if(filtered.length === 0) {
+        container.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding:20px;">No transactions found.</div>`;
         return;
       }
 
-      container.innerHTML = filtered.map(t => {
-        const isInc = t.type === 'INCOME';
-        const formattedDate = new Date(t.date).toLocaleString([], {
-          year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-        });
+      filtered.forEach(t => {
+        const isInc = t.type === 'income';
+        const item = document.createElement('div');
+        item.className = 'history-item';
+        item.onclick = () => openModal(t);
 
-        return `
-          <div class="transaction-item" onclick="openModal('${t.id}')">
-            <div class="tx-info">
-              <div class="tx-note">${escapeHtml(t.note)}</div>
-              <div class="tx-date">${formattedDate}</div>
-            </div>
-            <div class="tx-amount ${isInc ? 'income' : 'expense'}">
-              ${isInc ? '+' : '-'}${t.amount.toFixed(2)}
-            </div>
+        item.innerHTML = `
+          <div class="history-info">
+            <div class="history-note">${t.note}</div>
+            <div class="history-date">${t.date.replace('T', ' ')}</div>
+          </div>
+          <div class="history-amount ${isInc ? 'stat-green' : 'stat-red'}">
+            ${isInc ? '+' : '-'} ${t.amount.toFixed(2)}
           </div>
         `;
-      }).join('');
+        container.appendChild(item);
+      });
     }
 
-    /* --- MODAL DIALOG MANAGEMENT --- */
-    function openModal(id) {
-      const tx = transactions.find(t => t.id === id);
-      if (!tx) return;
-
-      activeModalTxId = id;
-      const isInc = tx.type === 'INCOME';
-
-      document.getElementById('modal-type-title').textContent = isInc ? 'Income Record' : 'Expense Record';
-      document.getElementById('modal-amount').textContent = `${isInc ? '+' : '-'}${tx.amount.toFixed(2)} RSD`;
-      document.getElementById('modal-amount').style.color = isInc ? 'var(--accent-green)' : 'var(--accent-red)';
-      document.getElementById('modal-note-body').textContent = tx.note;
-      document.getElementById('modal-timestamp').textContent = `Recorded on: ${new Date(tx.date).toLocaleString()}`;
-
-      document.getElementById('tx-modal').classList.add('active');
+    // Modal Details
+    function openModal(t) {
+      const isInc = t.type === 'income';
+      document.getElementById('modal-type').innerText = isInc ? 'Income Record' : 'Expense Record';
+      document.getElementById('modal-note').innerText = t.note;
+      document.getElementById('modal-date').innerText = `Date: ${t.date.replace('T', ' ')}`;
+      const amtEl = document.getElementById('modal-amount');
+      amtEl.innerText = `${isInc ? '+' : '-'} ${t.amount.toFixed(2)} RSD`;
+      amtEl.className = isInc ? 'stat-green' : 'stat-red';
+      document.getElementById('note-modal').style.display = 'flex';
     }
 
     function closeModal() {
-      document.getElementById('tx-modal').classList.remove('active');
-      activeModalTxId = null;
+      document.getElementById('note-modal').style.display = 'none';
     }
 
-    function deleteCurrentTx() {
-      if (!activeModalTxId) return;
-      transactions = transactions.filter(t => t.id !== activeModalTxId);
-      saveState();
-      closeModal();
-      renderHistory();
-      updateDashboard();
+    // Save & Currency Calculation
+    function saveRate() {
+      rsdRate = parseFloat(document.getElementById('exchange-rate').value) || 0;
+      localStorage.setItem('ms_rsd_rate', rsdRate);
+      updateRatesPanel();
     }
 
-    /* --- CONVERTER & CURRENCY LOGIC --- */
     function updateRatesPanel() {
-      document.getElementById('exchange-rate-input').value = exchangeRate;
-      
-      let totalIncome = 0;
-      let totalExpense = 0;
+      document.getElementById('exchange-rate').value = rsdRate || '';
+      let totalIncome = 0, totalSpend = 0;
       transactions.forEach(t => {
-        if (t.type === 'INCOME') totalIncome += t.amount;
-        if (t.type === 'EXPENSE') totalExpense += t.amount;
+        if(t.type === 'income') totalIncome += t.amount;
+        if(t.type === 'spend') totalSpend += t.amount;
       });
-      
-      const balanceRSD = totalIncome - totalExpense;
-      const balanceLKR = balanceRSD * exchangeRate;
-      
-      document.getElementById('lkr-balance-display').textContent = `${balanceLKR.toFixed(2)} LKR`;
-      calculateConversion();
+      const currentRsd = totalIncome - totalSpend;
+      const lkrVal = currentRsd * rsdRate;
+      document.getElementById('lkr-total-balance').innerText = `${lkrVal.toFixed(2)} LKR`;
+      calcCustom();
     }
 
-    function saveExchangeRate() {
-      const val = parseFloat(document.getElementById('exchange-rate-input').value);
-      if (val && val > 0) {
-        exchangeRate = val;
-        localStorage.setItem('ms_exchange_rate', exchangeRate);
-        updateRatesPanel();
-        alert('Exchange rate updated successfully!');
-      }
+    function calcCustom() {
+      const customRsd = parseFloat(document.getElementById('custom-rsd').value) || 0;
+      const lkrRes = customRsd * rsdRate;
+      document.getElementById('custom-lkr-result').innerText = `${lkrRes.toFixed(2)} LKR`;
     }
 
-    function calculateConversion() {
-      const rsd = parseFloat(document.getElementById('calc-rsd').value) || 0;
-      const lkr = rsd * exchangeRate;
-      document.getElementById('calc-lkr-result').textContent = `${lkr.toFixed(2)} LKR`;
-    }
-
-    /* --- UTILS --- */
-    function saveState() {
+    function saveData() {
       localStorage.setItem('ms_transactions', JSON.stringify(transactions));
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-    }
-
-    // INITIALIZATION
-    window.addEventListener('DOMContentLoaded', () => {
-      resetFormDates();
       updateDashboard();
-    });
+    }
+
+    // Initial Load
+    setNowDate();
+    updateDashboard();
   </script>
 </body>
 </html>
