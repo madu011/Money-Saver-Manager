@@ -20,6 +20,7 @@
       --text-muted: #888888;
       --green: #22c55e;
       --red: #ef4444;
+      --accent: #3b82f6;
     }
 
     * {
@@ -41,7 +42,7 @@
       padding-bottom: 80px;
     }
 
-    /* Top Header with Image */
+    /* Top Header */
     header {
       padding: 12px 16px;
       background: rgba(10, 10, 10, 0.9);
@@ -76,15 +77,14 @@
       text-transform: uppercase;
     }
 
-    .currency-select-header {
+    .active-currency-badge {
       background: #1f1f1f;
-      color: #fff;
+      color: var(--accent);
       border: 1px solid var(--border);
-      padding: 5px 8px;
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-      outline: none;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
     }
 
     /* Tab Panels */
@@ -103,12 +103,12 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Main Balance Card */
+    /* Main Balance Cards */
     .balance-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 28px 20px;
+      padding: 24px 20px;
       text-align: center;
       margin-top: 10px;
     }
@@ -118,15 +118,46 @@
       color: var(--text-muted);
       text-transform: uppercase;
       letter-spacing: 1px;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .balance-amount {
       font-size: 2.2rem;
       font-weight: 800;
       color: var(--text-main);
-      margin-bottom: 18px;
+      margin-bottom: 15px;
       word-break: break-all;
+    }
+
+    /* Converted Rates Under Main Balance */
+    .multi-currency-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid var(--border);
+    }
+
+    .curr-val-box {
+      background: #181818;
+      border: 1px solid var(--border);
+      padding: 8px 4px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .curr-val-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .curr-val-amount {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 2px;
+      color: #e0e0e0;
     }
 
     .stats-row {
@@ -134,13 +165,14 @@
       justify-content: space-around;
       border-top: 1px solid var(--border);
       padding-top: 15px;
+      margin-top: 15px;
     }
 
     .stat-item {
       display: flex;
       align-items: center;
       gap: 6px;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
     }
 
@@ -193,7 +225,7 @@
       border: 1px solid var(--border);
     }
 
-    /* History List & Filter */
+    /* History & Filters */
     .filter-row {
       display: flex;
       gap: 10px;
@@ -217,30 +249,12 @@
       cursor: pointer;
     }
 
-    .history-info {
-      max-width: 60%;
-    }
+    .history-info { max-width: 60%; }
+    .history-note { font-size: 0.95rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .history-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .history-amount { font-weight: 700; font-size: 1.05rem; }
 
-    .history-note {
-      font-size: 0.95rem;
-      color: var(--text-main);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .history-date {
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: 4px;
-    }
-
-    .history-amount {
-      font-weight: 700;
-      font-size: 1.05rem;
-    }
-
-    /* Cards */
+    /* Calculator Cards */
     .calc-card {
       background: var(--card-bg);
       border: 1px solid var(--border);
@@ -249,35 +263,8 @@
       margin-bottom: 15px;
     }
 
-    .calc-title {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 10px;
-    }
-
-    .calc-result {
-      font-size: 1.3rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .rates-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .rate-chip {
-      background: #1a1a1a;
-      border: 1px solid var(--border);
-      padding: 8px;
-      border-radius: 8px;
-      text-align: center;
-    }
-
-    .rate-chip-title { font-size: 0.7rem; color: var(--text-muted); }
-    .rate-chip-val { font-size: 0.85rem; font-weight: 700; margin-top: 2px; }
+    .calc-title { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; }
+    .calc-result { font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
 
     /* Footer Branding */
     footer {
@@ -285,7 +272,6 @@
       padding: 20px 0;
       font-size: 0.75rem;
       color: var(--text-muted);
-      letter-spacing: 0.5px;
       margin-top: auto;
     }
 
@@ -319,15 +305,10 @@
       width: 16%;
     }
 
-    .nav-item.active {
-      color: var(--text-main);
-    }
+    .nav-item.active { color: var(--text-main); }
+    .nav-icon { font-size: 1.1rem; }
 
-    .nav-icon {
-      font-size: 1.1rem;
-    }
-
-    /* Modal Popup */
+    /* Modal */
     .modal {
       display: none;
       position: fixed;
@@ -349,49 +330,44 @@
       max-width: 400px;
     }
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 15px;
-    }
-
-    .modal-close {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.5rem;
-      cursor: pointer;
-    }
-
-    .full-note {
-      color: var(--text-main);
-      font-size: 1rem;
-      line-height: 1.5;
-      word-break: break-word;
-      margin-bottom: 15px;
-    }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+    .full-note { color: var(--text-main); font-size: 1rem; line-height: 1.5; word-break: break-word; margin-bottom: 15px; }
   </style>
 </head>
 <body>
 
-  <!-- App Header -->
+  <!-- Header -->
   <header>
     <div class="brand-container">
       <img src="1784723411245~2 (1).png" alt="Icon" class="header-logo" width="512" height="512" onerror="this.style.display='none'">
       <div class="app-title">MoneySaver</div>
     </div>
-    <select id="main-currency-select" class="currency-select-header" onchange="changeMainCurrency(this.value)">
-      <!-- Populated via JS -->
-    </select>
+    <div class="active-currency-badge" id="header-curr-badge">RSD / LKR</div>
   </header>
 
-  <!-- Panel 1: Home / Balance -->
+  <!-- Panel 1: Home Dashboard -->
   <div id="home-panel" class="panel active">
     <div class="balance-card">
-      <div class="balance-label">Total Balance</div>
-      <div class="balance-amount" id="main-balance">0.00</div>
+      <div class="balance-label">Total Main Balance</div>
+      <div class="balance-amount" id="main-balance">0.00 RSD</div>
       
+      <!-- Multi-currency Value Box -->
+      <div class="multi-currency-grid">
+        <div class="curr-val-box">
+          <div class="curr-val-label">USD VALUE</div>
+          <div class="curr-val-amount" id="val-usd">0.00</div>
+        </div>
+        <div class="curr-val-box">
+          <div class="curr-val-label">EUR VALUE</div>
+          <div class="curr-val-amount" id="val-eur">0.00</div>
+        </div>
+        <div class="curr-val-box">
+          <div class="curr-val-label" id="lbl-2nd-curr">LKR VALUE</div>
+          <div class="curr-val-amount" id="val-2nd">0.00</div>
+        </div>
+      </div>
+
       <div class="stats-row">
         <div class="stat-item stat-green">
           <span>▲</span> <span id="income-pct">0%</span> Income
@@ -413,7 +389,7 @@
         <input type="number" id="inc-amount" step="0.0001" placeholder="0.00" required>
       </div>
       <div class="form-group">
-        <label>Note / Description (Required)</label>
+        <label>Note / Description</label>
         <textarea id="inc-note" rows="3" placeholder="Where did you earn this?" required></textarea>
       </div>
       <div class="form-group">
@@ -424,7 +400,7 @@
     </form>
   </div>
 
-  <!-- Panel 3: Add Spend -->
+  <!-- Panel 3: Add Expense -->
   <div id="spend-panel" class="panel">
     <h3>Add Expense (-)</h3>
     <br>
@@ -434,7 +410,7 @@
         <input type="number" id="exp-amount" step="0.0001" placeholder="0.00" required>
       </div>
       <div class="form-group">
-        <label>Note / Description (Required)</label>
+        <label>Note / Description</label>
         <textarea id="exp-note" rows="3" placeholder="What was this spent on?" required></textarea>
       </div>
       <div class="form-group">
@@ -457,92 +433,70 @@
       </select>
       <input type="date" id="history-filter" onchange="renderHistory()">
     </div>
-    <div class="history-list" id="history-container">
-      <!-- Items dynamically added here -->
-    </div>
+    <div class="history-list" id="history-container"></div>
   </div>
 
   <!-- Panel 5: Currency Converter -->
   <div id="rates-panel" class="panel">
-    <h3>Currency Converter</h3>
+    <h3>Live Currency Converter</h3>
     <br>
-    
     <div class="calc-card">
-      <div class="form-group">
-        <label>Convert From (Earning / Main Currency)</label>
-        <select id="conv-from-select" onchange="updateRatesPanel()">
-          <!-- Populated via JS -->
-        </select>
+      <div style="font-size: 0.85rem; color: var(--accent); font-weight:700; margin-bottom: 10px;">
+        Converting: <span id="conv-pair-txt">RSD to LKR</span>
       </div>
       <div class="form-group">
-        <label>Convert To (Target Currency)</label>
-        <select id="conv-to-select" onchange="updateRatesPanel()">
-          <!-- Populated via JS -->
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Exchange Rate (1 <span id="lbl-from-curr">RSD</span> = ? <span id="lbl-to-curr">LKR</span>)</label>
-        <input type="number" id="exchange-rate" step="0.000001" placeholder="Rate" oninput="manualRateChange()">
+        <label>Exchange Rate (1 <span id="conv-from-lbl">RSD</span> = ? <span id="conv-to-lbl">LKR</span>)</label>
+        <input type="number" id="exchange-rate" step="0.000001" placeholder="Auto fetching live rate..." oninput="manualRateChange()">
       </div>
     </div>
 
     <div class="calc-card">
-      <div class="calc-title">Main Balance Converted</div>
-      <div class="calc-result" id="converted-total-balance">0.00</div>
-    </div>
-
-    <div class="calc-card">
-      <div class="calc-title">Custom Calculator</div>
+      <div class="calc-title">Custom Amount Calculator</div>
       <div class="form-group">
-        <input type="number" id="custom-val" step="0.0001" placeholder="Enter amount" oninput="calcCustom()">
+        <input type="number" id="custom-val" step="0.0001" placeholder="Enter amount to convert" oninput="calcCustom()">
       </div>
       <div class="calc-result" id="custom-calc-result">0.00</div>
     </div>
-
-    <!-- Live Rates Box -->
-    <div class="calc-card">
-      <div class="calc-title">Live Reference Rates (Auto Updates via Google/Open Rates)</div>
-      <div class="rates-grid">
-        <div class="rate-chip">
-          <div class="rate-chip-title">USD/LKR</div>
-          <div class="rate-chip-val" id="rate-usd-lkr">--</div>
-        </div>
-        <div class="rate-chip">
-          <div class="rate-chip-title">EUR/LKR</div>
-          <div class="rate-chip-val" id="rate-eur-lkr">--</div>
-        </div>
-        <div class="rate-chip">
-          <div class="rate-chip-title">RSD/LKR</div>
-          <div class="rate-chip-val" id="rate-rsd-lkr">--</div>
-        </div>
-      </div>
-    </div>
   </div>
 
-  <!-- Panel 6: Backup & Restore -->
-  <div id="backup-panel" class="panel">
-    <h3>Backup & Restore Data</h3>
+  <!-- Panel 6: Settings & Backup -->
+  <div id="settings-panel" class="panel">
+    <h3>Settings & Data Backup</h3>
     <br>
+    <!-- Currency Setup Form -->
+    <div class="calc-card">
+      <div class="calc-title" style="color:var(--text-main); font-weight:700;">App Currency Pair Setup</div>
+      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Select primary earning currency and target comparison currency for the whole app.</p>
+      
+      <div class="form-group">
+        <label>Main / Earning Currency</label>
+        <select id="set-main-curr"></select>
+      </div>
+      <div class="form-group">
+        <label>Second Chosen Currency</label>
+        <select id="set-second-curr"></select>
+      </div>
+      <button class="btn" style="background:var(--accent); color:#fff;" onclick="saveCurrencySettings()">Save Currencies</button>
+    </div>
+
     <div class="calc-card">
       <div class="calc-title">Export App Data</div>
-      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Download your complete balance, income, and expense records as a backup file.</p>
       <button class="btn btn-secondary" onclick="exportData()">Download Backup File</button>
     </div>
 
     <div class="calc-card">
       <div class="calc-title">Restore App Data</div>
-      <p style="font-size:0.8rem; color:var(--text-muted); margin-bottom:10px;">Upload a previously saved MoneySaver backup file to restore your records.</p>
       <input type="file" id="import-file" accept=".json" style="margin-bottom: 10px;">
       <button class="btn" style="background:#fff; color:#000;" onclick="importData()">Restore Data</button>
     </div>
   </div>
 
-  <!-- Footer Branding -->
+  <!-- Footer -->
   <footer>
     Made by Madhuranga Yasanath
   </footer>
 
-  <!-- Bottom Navigation -->
+  <!-- Navigation -->
   <nav class="bottom-nav">
     <button class="nav-item active" onclick="switchTab('home-panel', this)">
       <span class="nav-icon">💳</span>
@@ -564,13 +518,13 @@
       <span class="nav-icon">💱</span>
       <span>Rates</span>
     </button>
-    <button class="nav-item" onclick="switchTab('backup-panel', this)">
+    <button class="nav-item" onclick="switchTab('settings-panel', this)">
       <span class="nav-icon">⚙️</span>
-      <span>Backup</span>
+      <span>Settings</span>
     </button>
   </nav>
 
-  <!-- Note Details Modal -->
+  <!-- Modal -->
   <div class="modal" id="note-modal">
     <div class="modal-content">
       <div class="modal-header">
@@ -587,125 +541,153 @@
     const CURRENCIES = ["RSD", "LKR", "USD", "EUR", "GBP", "INR", "AUD", "CAD", "SAR", "AED", "JPY", "CNY", "CHF", "SGD", "NZD", "KWD", "QAR"];
 
     let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
-    let mainCurrency = localStorage.getItem('ms_main_currency') || "RSD";
-    let targetCurrency = localStorage.getItem('ms_target_currency') || "LKR";
-    let currentRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
+    let mainCurrency = localStorage.getItem('ms_main_curr') || "RSD";
+    let secondCurrency = localStorage.getItem('ms_second_curr') || "LKR";
+    let activeRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
     let liveRatesData = {};
 
-    // Format Numbers with Commas and Decimals
     function formatMoney(amount, currency = "") {
       const formatted = Number(amount).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
       return currency ? `${formatted} ${currency}` : formatted;
     }
 
-    // Populate Currency Selectors
-    function initCurrencies() {
-      const mainSelect = document.getElementById('main-currency-select');
-      const fromSelect = document.getElementById('conv-from-select');
-      const toSelect = document.getElementById('conv-to-select');
-
-      mainSelect.innerHTML = '';
-      fromSelect.innerHTML = '';
-      toSelect.innerHTML = '';
+    function initSettingsCurrencies() {
+      const mainSel = document.getElementById('set-main-curr');
+      const secSel = document.getElementById('set-second-curr');
+      mainSel.innerHTML = '';
+      secSel.innerHTML = '';
 
       CURRENCIES.forEach(c => {
-        mainSelect.add(new Option(c, c));
-        fromSelect.add(new Option(c, c));
-        toSelect.add(new Option(c, c));
+        mainSel.add(new Option(c, c));
+        secSel.add(new Option(c, c));
       });
 
-      mainSelect.value = mainCurrency;
-      fromSelect.value = mainCurrency;
-      toSelect.value = targetCurrency;
-
-      updateCurrencyLabels();
+      mainSel.value = mainCurrency;
+      secSel.value = secondCurrency;
+      updateUIElements();
     }
 
-    function updateCurrencyLabels() {
+    function saveCurrencySettings() {
+      mainCurrency = document.getElementById('set-main-curr').value;
+      secondCurrency = document.getElementById('set-second-curr').value;
+      
+      localStorage.setItem('ms_main_curr', mainCurrency);
+      localStorage.setItem('ms_second_curr', secondCurrency);
+      localStorage.removeItem('ms_manual_rate');
+
+      updateUIElements();
+      fetchLiveGoogleRates();
+      alert(`Currencies updated to ${mainCurrency} & ${secondCurrency}!`);
+    }
+
+    function updateUIElements() {
+      document.getElementById('header-curr-badge').innerText = `${mainCurrency} / ${secondCurrency}`;
       document.querySelectorAll('.curr-symbol').forEach(e => e.innerText = mainCurrency);
-      document.getElementById('lbl-from-curr').innerText = document.getElementById('conv-from-select').value;
-      document.getElementById('lbl-to-curr').innerText = document.getElementById('conv-to-select').value;
-    }
+      document.getElementById('lbl-2nd-curr').innerText = `${secondCurrency} VALUE`;
+      
+      document.getElementById('conv-pair-txt').innerText = `${mainCurrency} to ${secondCurrency}`;
+      document.getElementById('conv-from-lbl').innerText = mainCurrency;
+      document.getElementById('conv-to-lbl').innerText = secondCurrency;
 
-    function changeMainCurrency(val) {
-      mainCurrency = val;
-      localStorage.setItem('ms_main_currency', mainCurrency);
-      document.getElementById('conv-from-select').value = mainCurrency;
-      updateCurrencyLabels();
       updateDashboard();
-      fetchLiveExchangeRates();
     }
 
-    // Set Default Datetime
     function setNowDate() {
       const now = new Date();
       now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      const formatted = now.toISOString().slice(0,16);
-      document.getElementById('inc-date').value = formatted;
-      document.getElementById('exp-date').value = formatted;
+      document.getElementById('inc-date').value = now.toISOString().slice(0,16);
+      document.getElementById('exp-date').value = now.toISOString().slice(0,16);
     }
 
-    // Switch Tabs
     function switchTab(panelId, btnElement) {
       document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
       document.getElementById(panelId).classList.add('active');
       btnElement.classList.add('active');
+      
       if(panelId === 'home-panel') updateDashboard();
       if(panelId === 'history-panel') renderHistory();
-      if(panelId === 'rates-panel') updateRatesPanel();
     }
 
-    // Add Income
+    // Income & Spend Submissions
     document.getElementById('income-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const amount = parseFloat(document.getElementById('inc-amount').value);
-      const note = document.getElementById('inc-note').value;
-      const date = document.getElementById('inc-date').value;
-
-      transactions.push({ id: Date.now(), type: 'income', amount, note, date });
+      transactions.push({ id: Date.now(), type: 'income', amount: parseFloat(document.getElementById('inc-amount').value), note: document.getElementById('inc-note').value, date: document.getElementById('inc-date').value });
       saveData();
       e.target.reset();
       setNowDate();
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
 
-    // Add Spend
     document.getElementById('spend-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      const amount = parseFloat(document.getElementById('exp-amount').value);
-      const note = document.getElementById('exp-note').value;
-      const date = document.getElementById('exp-date').value;
-
-      transactions.push({ id: Date.now(), type: 'spend', amount, note, date });
+      transactions.push({ id: Date.now(), type: 'spend', amount: parseFloat(document.getElementById('exp-amount').value), note: document.getElementById('exp-note').value, date: document.getElementById('exp-date').value });
       saveData();
       e.target.reset();
       setNowDate();
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
 
-    // Calculate Balance & Analysis
-    function updateDashboard() {
-      let totalIncome = 0;
-      let totalSpend = 0;
+    // Auto Fetch Google/Open Exchange Live Rates
+    async function fetchLiveGoogleRates() {
+      try {
+        const res = await fetch(`https://open.er-api.com/v6/latest/${mainCurrency}`);
+        const data = await res.json();
+        if(data && data.rates) {
+          liveRatesData = data.rates;
+          
+          if(!localStorage.getItem('ms_manual_rate')) {
+            activeRate = liveRatesData[secondCurrency] || 1;
+            document.getElementById('exchange-rate').value = activeRate;
+          } else {
+            activeRate = parseFloat(localStorage.getItem('ms_manual_rate')) || activeRate;
+            document.getElementById('exchange-rate').value = activeRate;
+          }
 
+          updateDashboard();
+          calcCustom();
+        }
+      } catch (e) {
+        console.log("Error fetching rates:", e);
+      }
+    }
+
+    function manualRateChange() {
+      activeRate = parseFloat(document.getElementById('exchange-rate').value) || 0;
+      localStorage.setItem('ms_manual_rate', activeRate);
+      updateDashboard();
+      calcCustom();
+    }
+
+    function updateDashboard() {
+      let totalIncome = 0, totalSpend = 0;
       transactions.forEach(t => {
         if(t.type === 'income') totalIncome += t.amount;
         if(t.type === 'spend') totalSpend += t.amount;
       });
 
-      const mainBalance = totalIncome - totalSpend;
-      document.getElementById('main-balance').innerText = formatMoney(mainBalance, mainCurrency);
+      const mainBal = totalIncome - totalSpend;
+      document.getElementById('main-balance').innerText = `${formatMoney(mainBal)} ${mainCurrency}`;
+
+      // Convert to USD, EUR, and 2nd Selected Currency
+      const usdRate = liveRatesData['USD'] || 0;
+      const eurRate = liveRatesData['EUR'] || 0;
+
+      document.getElementById('val-usd').innerText = formatMoney(mainBal * usdRate, '$');
+      document.getElementById('val-eur').innerText = formatMoney(mainBal * eurRate, '€');
+      document.getElementById('val-2nd').innerText = formatMoney(mainBal * activeRate, secondCurrency);
 
       const totalFlow = totalIncome + totalSpend;
-      const incPct = totalFlow > 0 ? Math.round((totalIncome / totalFlow) * 100) : 0;
-      const expPct = totalFlow > 0 ? Math.round((totalSpend / totalFlow) * 100) : 0;
-
-      document.getElementById('income-pct').innerText = `${incPct}%`;
-      document.getElementById('expense-pct').innerText = `${expPct}%`;
+      document.getElementById('income-pct').innerText = `${totalFlow > 0 ? Math.round((totalIncome/totalFlow)*100) : 0}%`;
+      document.getElementById('expense-pct').innerText = `${totalFlow > 0 ? Math.round((totalSpend/totalFlow)*100) : 0}%`;
     }
 
-    // Render History List (Category & Date Filter)
+    function calcCustom() {
+      const customVal = parseFloat(document.getElementById('custom-val').value) || 0;
+      document.getElementById('custom-calc-result').innerText = formatMoney(customVal * activeRate, secondCurrency);
+    }
+
+    // Render History
     function renderHistory() {
       const container = document.getElementById('history-container');
       const filterDate = document.getElementById('history-filter').value;
@@ -713,18 +695,12 @@
       container.innerHTML = '';
 
       let filtered = transactions;
-
-      if(filterCat !== 'all') {
-        filtered = filtered.filter(t => t.type === filterCat);
-      }
-
-      if(filterDate) {
-        filtered = filtered.filter(t => t.date.startsWith(filterDate));
-      }
+      if(filterCat !== 'all') filtered = filtered.filter(t => t.type === filterCat);
+      if(filterDate) filtered = filtered.filter(t => t.date.startsWith(filterDate));
 
       filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-      if(filtered.length === 0) {
+      if(!filtered.length) {
         container.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding:20px;">No transactions found.</div>`;
         return;
       }
@@ -748,7 +724,6 @@
       });
     }
 
-    // Modal Details
     function openModal(t) {
       const isInc = t.type === 'income';
       document.getElementById('modal-type').innerText = isInc ? 'Income Record' : 'Expense Record';
@@ -764,76 +739,8 @@
       document.getElementById('note-modal').style.display = 'none';
     }
 
-    // Auto Fetch Live Exchange Rates
-    async function fetchLiveExchangeRates() {
-      try {
-        const fromCurr = document.getElementById('conv-from-select').value || mainCurrency;
-        const res = await fetch(`https://open.er-api.com/v6/latest/${fromCurr}`);
-        const data = await res.json();
-        if(data && data.rates) {
-          liveRatesData = data.rates;
-          const toCurr = document.getElementById('conv-to-select').value;
-          if(liveRatesData[toCurr] && !localStorage.getItem('ms_manual_override')) {
-            currentRate = liveRatesData[toCurr];
-            document.getElementById('exchange-rate').value = currentRate;
-          }
-          
-          // Reference Rates
-          if(data.rates['LKR']) {
-            document.getElementById('rate-usd-lkr').innerText = (data.rates['LKR'] / (data.rates['USD'] || 1)).toFixed(2);
-            document.getElementById('rate-eur-lkr').innerText = (data.rates['LKR'] / (data.rates['EUR'] || 1)).toFixed(2);
-            document.getElementById('rate-rsd-lkr').innerText = (data.rates['LKR'] / (data.rates['RSD'] || 1)).toFixed(2);
-          }
-          updateRatesCalculations();
-        }
-      } catch (e) {
-        console.log("Exchange API Error:", e);
-      }
-    }
-
-    function manualRateChange() {
-      currentRate = parseFloat(document.getElementById('exchange-rate').value) || 0;
-      localStorage.setItem('ms_manual_override', 'true');
-      localStorage.setItem('ms_active_rate', currentRate);
-      updateRatesCalculations();
-    }
-
-    function updateRatesPanel() {
-      const fromCurr = document.getElementById('conv-from-select').value;
-      const toCurr = document.getElementById('conv-to-select').value;
-      targetCurrency = toCurr;
-      localStorage.setItem('ms_target_currency', targetCurrency);
-      updateCurrencyLabels();
-      fetchLiveExchangeRates();
-    }
-
-    function updateRatesCalculations() {
-      document.getElementById('exchange-rate').value = currentRate || '';
-      let totalIncome = 0, totalSpend = 0;
-      transactions.forEach(t => {
-        if(t.type === 'income') totalIncome += t.amount;
-        if(t.type === 'spend') totalSpend += t.amount;
-      });
-      const currentBal = totalIncome - totalSpend;
-      const convertedBal = currentBal * currentRate;
-      document.getElementById('converted-total-balance').innerText = formatMoney(convertedBal, targetCurrency);
-      calcCustom();
-    }
-
-    function calcCustom() {
-      const customVal = parseFloat(document.getElementById('custom-val').value) || 0;
-      const res = customVal * currentRate;
-      document.getElementById('custom-calc-result').innerText = formatMoney(res, targetCurrency);
-    }
-
-    // Export & Backup
     function exportData() {
-      const backupObj = {
-        transactions,
-        mainCurrency,
-        targetCurrency,
-        currentRate
-      };
+      const backupObj = { transactions, mainCurrency, secondCurrency };
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
@@ -845,11 +752,8 @@
 
     function importData() {
       const fileInput = document.getElementById('import-file');
-      if (!fileInput.files.length) {
-        alert("Please select a JSON backup file first.");
-        return;
-      }
-      const file = fileInput.files[0];
+      if (!fileInput.files.length) return alert("Select a backup JSON file first.");
+      
       const reader = new FileReader();
       reader.onload = function(e) {
         try {
@@ -857,17 +761,16 @@
           if (imported.transactions) {
             transactions = imported.transactions;
             if (imported.mainCurrency) mainCurrency = imported.mainCurrency;
-            if (imported.targetCurrency) targetCurrency = imported.targetCurrency;
+            if (imported.secondCurrency) secondCurrency = imported.secondCurrency;
             saveData();
-            initCurrencies();
+            initSettingsCurrencies();
+            fetchLiveGoogleRates();
             alert("Data restored successfully!");
             switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
           }
-        } catch (err) {
-          alert("Invalid backup file format.");
-        }
+        } catch (err) { alert("Invalid backup file."); }
       };
-      reader.readAsText(file);
+      reader.readAsText(fileInput.files[0]);
     }
 
     function saveData() {
@@ -875,11 +778,10 @@
       updateDashboard();
     }
 
-    // Initial Execution
-    initCurrencies();
+    // Init App
+    initSettingsCurrencies();
     setNowDate();
-    updateDashboard();
-    fetchLiveExchangeRates();
+    fetchLiveGoogleRates();
   </script>
 </body>
 </html>
