@@ -230,24 +230,25 @@
       align-items: center;
     }
 
-    .city-select {
+    .city-input {
       background: #1a1a1a;
       color: #fff;
       border: 1px solid var(--border);
-      padding: 5px;
+      padding: 6px 8px;
       border-radius: 6px;
       font-size: 0.8rem;
-      width: 150px;
+      width: 170px;
     }
 
     .time-txt {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 700;
       color: #fff;
+      text-align: right;
     }
 
     .weather-txt {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: #3b82f6;
       font-weight: 600;
       margin-top: 2px;
@@ -375,6 +376,9 @@
     <div class="active-currency-badge" id="header-curr-badge">RSD / LKR</div>
   </header>
 
+  <!-- Global Cities Datalist for Fast Search -->
+  <datalist id="cities-list"></datalist>
+
   <!-- Panel 1: Home Dashboard -->
   <div id="home-panel" class="panel active">
     <div class="balance-card">
@@ -414,13 +418,12 @@
       </div>
     </div>
 
-    <!-- 5 Live Weather & Clock Panels -->
-    <div class="weather-grid-title">World Clocks & Live Weather</div>
+    <!-- 5 Live Weather & Clock Panels with Search Input -->
+    <div class="weather-grid-title">World Clocks & Live Weather (Type Country)</div>
     <div class="weather-container">
-      <!-- 5 Country Panels -->
       <div class="weather-card" id="w-card-0">
         <div>
-          <select class="city-select" onchange="updateCity(0, this.value)"></select>
+          <input list="cities-list" class="city-input" placeholder="Type Country/City..." onchange="updateCityBySearch(0, this.value)" id="c-input-0">
           <div class="weather-txt" id="w-temp-0">Loading weather...</div>
         </div>
         <div class="time-txt" id="w-time-0">--:--:-- --</div>
@@ -428,7 +431,7 @@
 
       <div class="weather-card" id="w-card-1">
         <div>
-          <select class="city-select" onchange="updateCity(1, this.value)"></select>
+          <input list="cities-list" class="city-input" placeholder="Type Country/City..." onchange="updateCityBySearch(1, this.value)" id="c-input-1">
           <div class="weather-txt" id="w-temp-1">Loading weather...</div>
         </div>
         <div class="time-txt" id="w-time-1">--:--:-- --</div>
@@ -436,7 +439,7 @@
 
       <div class="weather-card" id="w-card-2">
         <div>
-          <select class="city-select" onchange="updateCity(2, this.value)"></select>
+          <input list="cities-list" class="city-input" placeholder="Type Country/City..." onchange="updateCityBySearch(2, this.value)" id="c-input-2">
           <div class="weather-txt" id="w-temp-2">Loading weather...</div>
         </div>
         <div class="time-txt" id="w-time-2">--:--:-- --</div>
@@ -444,7 +447,7 @@
 
       <div class="weather-card" id="w-card-3">
         <div>
-          <select class="city-select" onchange="updateCity(3, this.value)"></select>
+          <input list="cities-list" class="city-input" placeholder="Type Country/City..." onchange="updateCityBySearch(3, this.value)" id="c-input-3">
           <div class="weather-txt" id="w-temp-3">Loading weather...</div>
         </div>
         <div class="time-txt" id="w-time-3">--:--:-- --</div>
@@ -452,7 +455,7 @@
 
       <div class="weather-card" id="w-card-4">
         <div>
-          <select class="city-select" onchange="updateCity(4, this.value)"></select>
+          <input list="cities-list" class="city-input" placeholder="Type Country/City..." onchange="updateCityBySearch(4, this.value)" id="c-input-4">
           <div class="weather-txt" id="w-temp-4">Loading weather...</div>
         </div>
         <div class="time-txt" id="w-time-4">--:--:-- --</div>
@@ -638,56 +641,99 @@
   </div>
 
   <script>
-    const CURRENCIES = ["RSD", "LKR", "USD", "EUR", "GBP", "INR", "AUD", "CAD", "SAR", "AED", "JPY", "CNY", "CHF", "SGD", "NZD", "KWD", "QAR"];
+    const CURRENCIES = ["RSD", "LKR", "USD", "EUR", "GBP", "INR", "AUD", "CAD", "SAR", "AED", "JPY", "CNY", "CHF", "SGD", "NZD", "KWD", "QAR", "BHD", "OMR", "MYR", "THB", "KRW", "RUB", "BRL", "ZAR", "EGP"];
 
-    // Comprehensive Worldwide City & Country List
+    // Massive Worldwide Countries & Cities Database
     const CITIES = [
-      { name: "Colombo, Sri Lanka", tz: "Asia/Colombo", lat: 6.9271, lon: 79.8612 },
-      { name: "Belgrade, Serbia", tz: "Europe/Belgrade", lat: 44.7866, lon: 20.4489 },
-      { name: "London, UK", tz: "Europe/London", lat: 51.5074, lon: -0.1278 },
-      { name: "New York, USA", tz: "America/New_York", lat: 40.7128, lon: -74.0060 },
-      { name: "Dubai, UAE", tz: "Asia/Dubai", lat: 25.2048, lon: 55.2708 },
-      { name: "Riyadh, Saudi Arabia", tz: "Asia/Riyadh", lat: 24.7136, lon: 46.6753 },
-      { name: "Doha, Qatar", tz: "Asia/Qatar", lat: 25.2854, lon: 51.5310 },
-      { name: "Kuwait City, Kuwait", tz: "Asia/Kuwait", lat: 29.3759, lon: 47.9774 },
-      { name: "Muscat, Oman", tz: "Asia/Muscat", lat: 23.5880, lon: 58.3829 },
-      { name: "New Delhi, India", tz: "Asia/Kolkata", lat: 28.6139, lon: 77.2090 },
-      { name: "Tokyo, Japan", tz: "Asia/Tokyo", lat: 35.6762, lon: 139.6503 },
-      { name: "Beijing, China", tz: "Asia/Shanghai", lat: 39.9042, lon: 116.4074 },
+      { name: "Afghanistan (Kabul)", tz: "Asia/Kabul", lat: 34.5553, lon: 69.2075 },
+      { name: "Albania (Tirana)", tz: "Europe/Tirana", lat: 41.3275, lon: 19.8187 },
+      { name: "Algeria (Algiers)", tz: "Africa/Algiers", lat: 36.7538, lon: 3.0588 },
+      { name: "Argentina (Buenos Aires)", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lon: -58.3816 },
+      { name: "Armenia (Yerevan)", tz: "Asia/Yerevan", lat: 40.1872, lon: 44.5152 },
+      { name: "Australia (Sydney)", tz: "Australia/Sydney", lat: -33.8688, lon: 151.2093 },
+      { name: "Australia (Melbourne)", tz: "Australia/Melbourne", lat: -37.8136, lon: 144.9631 },
+      { name: "Australia (Perth)", tz: "Australia/Perth", lat: -31.9505, lon: 115.8605 },
+      { name: "Austria (Vienna)", tz: "Europe/Vienna", lat: 48.2082, lon: 16.3738 },
+      { name: "Azerbaijan (Baku)", tz: "Asia/Baku", lat: 40.4093, lon: 49.8671 },
+      { name: "Bahrain (Manama)", tz: "Asia/Bahrain", lat: 26.2285, lon: 50.5860 },
+      { name: "Bangladesh (Dhaka)", tz: "Asia/Dhaka", lat: 23.8103, lon: 90.4125 },
+      { name: "Belarus (Minsk)", tz: "Europe/Minsk", lat: 53.9006, lon: 27.5590 },
+      { name: "Belgium (Brussels)", tz: "Europe/Brussels", lat: 50.8503, lon: 4.3517 },
+      { name: "Brazil (Sao Paulo)", tz: "America/Sao_Paulo", lat: -23.5505, lon: -46.6333 },
+      { name: "Bulgaria (Sofia)", tz: "Europe/Sofia", lat: 42.6977, lon: 23.3219 },
+      { name: "Cambodia (Phnom Penh)", tz: "Asia/Phnom_Penh", lat: 11.5564, lon: 104.9282 },
+      { name: "Canada (Toronto)", tz: "America/Toronto", lat: 43.6532, lon: -79.3832 },
+      { name: "Canada (Vancouver)", tz: "America/Vancouver", lat: 49.2827, lon: -123.1207 },
+      { name: "Chile (Santiago)", tz: "America/Santiago", lat: -33.4489, lon: -70.6693 },
+      { name: "China (Beijing)", tz: "Asia/Shanghai", lat: 39.9042, lon: 116.4074 },
+      { name: "Colombia (Bogota)", tz: "America/Bogota", lat: 4.7110, lon: -74.0721 },
+      { name: "Croatia (Zagreb)", tz: "Europe/Zagreb", lat: 45.8150, lon: 15.9819 },
+      { name: "Cyprus (Nicosia)", tz: "Asia/Nicosia", lat: 35.1856, lon: 33.3823 },
+      { name: "Czech Republic (Prague)", tz: "Europe/Prague", lat: 50.0755, lon: 14.4378 },
+      { name: "Denmark (Copenhagen)", tz: "Europe/Copenhagen", lat: 55.6761, lon: 12.5683 },
+      { name: "Egypt (Cairo)", tz: "Africa/Cairo", lat: 30.0444, lon: 31.2357 },
+      { name: "Ethiopia (Addis Ababa)", tz: "Africa/Addis_Ababa", lat: 9.0300, lon: 38.7400 },
+      { name: "Finland (Helsinki)", tz: "Europe/Helsinki", lat: 60.1699, lon: 24.9384 },
+      { name: "France (Paris)", tz: "Europe/Paris", lat: 48.8566, lon: 2.3522 },
+      { name: "Georgia (Tbilisi)", tz: "Asia/Tbilisi", lat: 41.7151, lon: 44.8271 },
+      { name: "Germany (Berlin)", tz: "Europe/Berlin", lat: 52.5200, lon: 13.4050 },
+      { name: "Greece (Athens)", tz: "Europe/Athens", lat: 37.9838, lon: 23.7275 },
+      { name: "Hungary (Budapest)", tz: "Europe/Budapest", lat: 47.4979, lon: 19.0402 },
+      { name: "Iceland (Reykjavik)", tz: "Atlantic/Reykjavik", lat: 64.1466, lon: -21.9426 },
+      { name: "India (New Delhi)", tz: "Asia/Kolkata", lat: 28.6139, lon: 77.2090 },
+      { name: "Indonesia (Jakarta)", tz: "Asia/Jakarta", lat: -6.2088, lon: 106.8456 },
+      { name: "Iran (Tehran)", tz: "Asia/Tehran", lat: 35.6892, lon: 51.3890 },
+      { name: "Iraq (Baghdad)", tz: "Asia/Baghdad", lat: 33.3152, lon: 44.3661 },
+      { name: "Ireland (Dublin)", tz: "Europe/Dublin", lat: 53.3498, lon: -6.2603 },
+      { name: "Israel (Tel Aviv)", tz: "Asia/Tel_Aviv", lat: 32.0853, lon: 34.7818 },
+      { name: "Italy (Rome)", tz: "Europe/Rome", lat: 41.9028, lon: 12.4964 },
+      { name: "Japan (Tokyo)", tz: "Asia/Tokyo", lat: 35.6762, lon: 139.6503 },
+      { name: "Jordan (Amman)", tz: "Asia/Amman", lat: 31.9454, lon: 35.9284 },
+      { name: "Kazakhstan (Almaty)", tz: "Asia/Almaty", lat: 43.2220, lon: 76.8512 },
+      { name: "Kenya (Nairobi)", tz: "Africa/Nairobi", lat: -1.2921, lon: 36.8219 },
+      { name: "Kuwait (Kuwait City)", tz: "Asia/Kuwait", lat: 29.3759, lon: 47.9774 },
+      { name: "Lebanon (Beirut)", tz: "Asia/Beirut", lat: 33.8938, lon: 35.5018 },
+      { name: "Malaysia (Kuala Lumpur)", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lon: 101.6869 },
+      { name: "Maldives (Male)", tz: "Indian/Maldives", lat: 4.1755, lon: 73.5093 },
+      { name: "Mexico (Mexico City)", tz: "America/Mexico_City", lat: 19.4326, lon: -99.1332 },
+      { name: "Morocco (Casablanca)", tz: "Africa/Casablanca", lat: 33.5731, lon: -7.5898 },
+      { name: "Nepal (Kathmandu)", tz: "Asia/Kathmandu", lat: 27.7172, lon: 85.3240 },
+      { name: "Netherlands (Amsterdam)", tz: "Europe/Amsterdam", lat: 52.3676, lon: 4.9041 },
+      { name: "New Zealand (Auckland)", tz: "Pacific/Auckland", lat: -36.8485, lon: 174.7633 },
+      { name: "Nigeria (Lagos)", tz: "Africa/Lagos", lat: 6.5244, lon: 3.3792 },
+      { name: "Norway (Oslo)", tz: "Europe/Oslo", lat: 59.9139, lon: 10.7522 },
+      { name: "Oman (Muscat)", tz: "Asia/Muscat", lat: 23.5880, lon: 58.3829 },
+      { name: "Pakistan (Karachi)", tz: "Asia/Karachi", lat: 24.8607, lon: 67.0011 },
+      { name: "Philippines (Manila)", tz: "Asia/Manila", lat: 14.5995, lon: 120.9842 },
+      { name: "Poland (Warsaw)", tz: "Europe/Warsaw", lat: 52.2297, lon: 21.0122 },
+      { name: "Portugal (Lisbon)", tz: "Europe/Lisbon", lat: 38.7223, lon: -9.1393 },
+      { name: "Qatar (Doha)", tz: "Asia/Qatar", lat: 25.2854, lon: 51.5310 },
+      { name: "Romania (Bucharest)", tz: "Europe/Bucharest", lat: 44.4268, lon: 26.1025 },
+      { name: "Russia (Moscow)", tz: "Europe/Moscow", lat: 55.7558, lon: 37.6173 },
+      { name: "Saudi Arabia (Riyadh)", tz: "Asia/Riyadh", lat: 24.7136, lon: 46.6753 },
+      { name: "Serbia (Belgrade)", tz: "Europe/Belgrade", lat: 44.7866, lon: 20.4489 },
       { name: "Singapore", tz: "Asia/Singapore", lat: 1.3521, lon: 103.8198 },
-      { name: "Kuala Lumpur, Malaysia", tz: "Asia/Kuala_Lumpur", lat: 3.1390, lon: 101.6869 },
-      { name: "Bangkok, Thailand", tz: "Asia/Bangkok", lat: 13.7563, lon: 100.5018 },
-      { name: "Seoul, South Korea", tz: "Asia/Seoul", lat: 37.5665, lon: 126.9780 },
-      { name: "Paris, France", tz: "Europe/Paris", lat: 48.8566, lon: 2.3522 },
-      { name: "Berlin, Germany", tz: "Europe/Berlin", lat: 52.5200, lon: 13.4050 },
-      { name: "Rome, Italy", tz: "Europe/Rome", lat: 41.9028, lon: 12.4964 },
-      { name: "Madrid, Spain", tz: "Europe/Madrid", lat: 40.4168, lon: -3.7038 },
-      { name: "Zurich, Switzerland", tz: "Europe/Zurich", lat: 47.3769, lon: 8.5417 },
-      { name: "Moscow, Russia", tz: "Europe/Moscow", lat: 55.7558, lon: 37.6173 },
-      { name: "Athens, Greece", tz: "Europe/Athens", lat: 37.9838, lon: 23.7275 },
-      { name: "Stockholm, Sweden", tz: "Europe/Stockholm", lat: 59.3293, lon: 18.0686 },
-      { name: "Amsterdam, Netherlands", tz: "Europe/Amsterdam", lat: 52.3676, lon: 4.9041 },
-      { name: "Sydney, Australia", tz: "Australia/Sydney", lat: -33.8688, lon: 151.2093 },
-      { name: "Melbourne, Australia", tz: "Australia/Melbourne", lat: -37.8136, lon: 144.9631 },
-      { name: "Auckland, New Zealand", tz: "Pacific/Auckland", lat: -36.8485, lon: 174.7633 },
-      { name: "Los Angeles, USA", tz: "America/Los_Angeles", lat: 34.0522, lon: -118.2437 },
-      { name: "Chicago, USA", tz: "America/Chicago", lat: 41.8781, lon: -87.6298 },
-      { name: "Toronto, Canada", tz: "America/Toronto", lat: 43.6532, lon: -79.3832 },
-      { name: "Vancouver, Canada", tz: "America/Vancouver", lat: 49.2827, lon: -123.1207 },
-      { name: "Mexico City, Mexico", tz: "America/Mexico_City", lat: 19.4326, lon: -99.1332 },
-      { name: "Sao Paulo, Brazil", tz: "America/Sao_Paulo", lat: -23.5505, lon: -46.6333 },
-      { name: "Buenos Aires, Argentina", tz: "America/Argentina/Buenos_Aires", lat: -34.6037, lon: -58.3816 },
-      { name: "Cairo, Egypt", tz: "Africa/Cairo", lat: 30.0444, lon: 31.2357 },
-      { name: "Johannesburg, S. Africa", tz: "Africa/Johannesburg", lat: -26.2041, lon: 28.0473 },
-      { name: "Nairobi, Kenya", tz: "Africa/Nairobi", lat: -1.2921, lon: 36.8219 },
-      { name: "Istanbul, Turkey", tz: "Europe/Istanbul", lat: 41.0082, lon: 28.9784 },
-      { name: "Male, Maldives", tz: "Indian/Maldives", lat: 4.1755, lon: 73.5093 }
+      { name: "South Africa (Johannesburg)", tz: "Africa/Johannesburg", lat: -26.2041, lon: 28.0473 },
+      { name: "South Korea (Seoul)", tz: "Asia/Seoul", lat: 37.5665, lon: 126.9780 },
+      { name: "Spain (Madrid)", tz: "Europe/Madrid", lat: 40.4168, lon: -3.7038 },
+      { name: "Sri Lanka (Colombo)", tz: "Asia/Colombo", lat: 6.9271, lon: 79.8612 },
+      { name: "Sweden (Stockholm)", tz: "Europe/Stockholm", lat: 59.3293, lon: 18.0686 },
+      { name: "Switzerland (Zurich)", tz: "Europe/Zurich", lat: 47.3769, lon: 8.5417 },
+      { name: "Thailand (Bangkok)", tz: "Asia/Bangkok", lat: 13.7563, lon: 100.5018 },
+      { name: "Turkey (Istanbul)", tz: "Europe/Istanbul", lat: 41.0082, lon: 28.9784 },
+      { name: "UAE (Dubai)", tz: "Asia/Dubai", lat: 25.2048, lon: 55.2708 },
+      { name: "UK (London)", tz: "Europe/London", lat: 51.5074, lon: -0.1278 },
+      { name: "Ukraine (Kyiv)", tz: "Europe/Kyiv", lat: 50.4501, lon: 30.5234 },
+      { name: "USA (New York)", tz: "America/New_York", lat: 40.7128, lon: -74.0060 },
+      { name: "USA (Los Angeles)", tz: "America/Los_Angeles", lat: 34.0522, lon: -118.2437 },
+      { name: "USA (Chicago)", tz: "America/Chicago", lat: 41.8781, lon: -87.6298 },
+      { name: "Vietnam (Hanoi)", tz: "Asia/Bangkok", lat: 21.0285, lon: 105.8542 }
     ];
 
     let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
     let mainCurrency = localStorage.getItem('ms_main_curr') || "RSD";
     let secondCurrency = localStorage.getItem('ms_second_curr') || "LKR";
-    let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [0, 1, 2, 3, 4];
+    let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [71, 66, 77, 79, 76]; 
     let activeRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
     let liveRatesData = {};
 
@@ -719,8 +765,19 @@
       freeFrom.value = "USD";
       freeTo.value = "LKR";
 
-      initWeatherCitySelectors();
+      populateDatalist();
+      initWeatherInputs();
       updateUIElements();
+    }
+
+    function populateDatalist() {
+      const dl = document.getElementById('cities-list');
+      dl.innerHTML = '';
+      CITIES.forEach(c => {
+        const opt = document.createElement('option');
+        opt.value = c.name;
+        dl.appendChild(opt);
+      });
     }
 
     function saveCurrencySettings() {
@@ -869,24 +926,23 @@
       } catch(e) { console.log(e); }
     }
 
-    // Live Clocks & Weather
-    function initWeatherCitySelectors() {
+    // Live Clocks & Weather with Search
+    function initWeatherInputs() {
       for(let i=0; i<5; i++) {
-        const sel = document.querySelectorAll('.city-select')[i];
-        sel.innerHTML = '';
-        CITIES.forEach((c, idx) => {
-          sel.add(new Option(c.name, idx));
-        });
-        sel.value = selectedCities[i];
+        const idx = selectedCities[i] < CITIES.length ? selectedCities[i] : 0;
+        document.getElementById(`c-input-${i}`).value = CITIES[idx].name;
         fetchWeatherForIndex(i);
       }
       setInterval(updateWorldClocks, 1000);
     }
 
-    function updateCity(panelIdx, cityIdx) {
-      selectedCities[panelIdx] = parseInt(cityIdx);
-      localStorage.setItem('ms_selected_cities', JSON.stringify(selectedCities));
-      fetchWeatherForIndex(panelIdx);
+    function updateCityBySearch(panelIdx, val) {
+      const foundIdx = CITIES.findIndex(c => c.name.toLowerCase() === val.trim().toLowerCase());
+      if(foundIdx !== -1) {
+        selectedCities[panelIdx] = foundIdx;
+        localStorage.setItem('ms_selected_cities', JSON.stringify(selectedCities));
+        fetchWeatherForIndex(panelIdx);
+      }
     }
 
     function updateWorldClocks() {
@@ -907,6 +963,8 @@
 
     async function fetchWeatherForIndex(idx) {
       const cityObj = CITIES[selectedCities[idx]];
+      if(!cityObj) return;
+      
       try {
         const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${cityObj.lat}&longitude=${cityObj.lon}&current_weather=true`);
         const data = await res.json();
