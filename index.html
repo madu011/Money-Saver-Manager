@@ -327,10 +327,27 @@
     .filter-row { display: flex; gap: 10px; margin-bottom: 15px; }
     .history-list { display: flex; flex-direction: column; gap: 10px; }
     .history-item { background: var(--card-bg); border: 1px solid var(--border); padding: 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
-    .history-info { max-width: 60%; }
+    .history-info { max-width: 50%; }
     .history-note { font-size: 0.95rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .history-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+    .history-right { display: flex; align-items: center; gap: 12px; }
     .history-amount { font-weight: 700; font-size: 1.05rem; }
+    
+    .delete-btn {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--red);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .delete-btn:active {
+      background: var(--red);
+      color: #fff;
+    }
 
     /* Calculator Cards */
     .calc-card {
@@ -667,6 +684,7 @@
       <div class="full-note" id="modal-note"></div>
       <div style="font-size: 0.8rem; color: var(--text-muted);" id="modal-date"></div>
       <div style="font-size: 1.2rem; font-weight: 700; margin-top: 10px;" id="modal-amount"></div>
+      <button class="btn" id="modal-delete-btn" style="background: var(--red); color: #fff; margin-top: 15px;">Delete Transaction</button>
     </div>
   </div>
 
@@ -823,7 +841,7 @@
       { code: "ZWL", name: "Zimbabwean Dollar", symbol: "Z$" }
     ];
 
-        // Worldwide Countries & Capitals Database (All 195+ UN Countries & Territories)
+    // Worldwide Countries & Capitals Database (All 195+ UN Countries & Territories)
     const CITIES = [
       { name: "Afghanistan (Kabul)", tz: "Asia/Kabul", lat: 34.5553, lon: 69.2075 },
       { name: "Albania (Tirana)", tz: "Europe/Tirana", lat: 41.3275, lon: 19.8187 },
@@ -1024,13 +1042,13 @@
       { name: "Zimbabwe (Harare)", tz: "Africa/Harare", lat: -17.8252, lon: 31.0335 }
     ];
 
-
     let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
     let mainCurrency = localStorage.getItem('ms_main_curr') || "RSD";
     let secondCurrency = localStorage.getItem('ms_second_curr') || "LKR";
     let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [27, 31, 35, 36, 34]; 
     let activeRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
     let liveRatesData = {};
+    let currentSelectedId = null;
 
     function extractCurrencyCode(str) {
       if(!str) return "USD";
@@ -1307,15 +1325,30 @@
             <div class="history-note">${t.note}</div>
             <div class="history-date">${t.date.replace('T', ' ')}</div>
           </div>
-          <div class="history-amount ${isInc ? 'stat-green' : 'stat-red'}">
-            ${isInc ? '+' : '-'} ${formatMoney(t.amount)}
+          <div class="history-right">
+            <div class="history-amount ${isInc ? 'stat-green' : 'stat-red'}">
+              ${isInc ? '+' : '-'} ${formatMoney(t.amount)}
+            </div>
+            <button class="delete-btn" onclick="deleteTransaction(event, ${t.id})">Delete</button>
           </div>
         `;
         container.appendChild(item);
       });
     }
 
+    // Delete Transaction Function
+    function deleteTransaction(event, id) {
+      if(event) event.stopPropagation(); // Modal එක open වෙන එක නවත්වන්න
+      if(confirm("Are you sure you want to delete this transaction?")) {
+        transactions = transactions.filter(t => t.id !== id);
+        saveData();
+        renderHistory();
+        closeModal();
+      }
+    }
+
     function openModal(t) {
+      currentSelectedId = t.id;
       const isInc = t.type === 'income';
       document.getElementById('modal-type').innerText = isInc ? 'Income Record' : 'Expense Record';
       document.getElementById('modal-note').innerText = t.note;
@@ -1323,6 +1356,10 @@
       const amtEl = document.getElementById('modal-amount');
       amtEl.innerText = `${isInc ? '+' : '-'} ${formatMoney(t.amount, mainCurrency)}`;
       amtEl.className = isInc ? 'stat-green' : 'stat-red';
+      
+      const delBtn = document.getElementById('modal-delete-btn');
+      delBtn.onclick = () => deleteTransaction(null, currentSelectedId);
+
       document.getElementById('note-modal').style.display = 'flex';
     }
 
