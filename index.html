@@ -108,7 +108,7 @@
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 24px 20px;
+      padding: 20px;
       text-align: center;
       margin-top: 10px;
     }
@@ -129,13 +129,13 @@
       word-break: break-all;
     }
 
-    /* Converted Rates Under Main Balance */
+    /* Multi-currency Grid */
     .multi-currency-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 8px;
-      margin-top: 15px;
-      padding-top: 15px;
+      margin-top: 12px;
+      padding-top: 12px;
       border-top: 1px solid var(--border);
     }
 
@@ -160,12 +160,37 @@
       color: #e0e0e0;
     }
 
+    /* Dynamic Any Currency Row */
+    .custom-curr-row {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .custom-curr-select {
+      background: #181818;
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+    }
+
+    .custom-curr-result {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
     .stats-row {
       display: flex;
       justify-content: space-around;
       border-top: 1px solid var(--border);
-      padding-top: 15px;
-      margin-top: 15px;
+      padding-top: 12px;
+      margin-top: 12px;
     }
 
     .stat-item {
@@ -178,6 +203,55 @@
 
     .stat-green { color: var(--green); }
     .stat-red { color: var(--red); }
+
+    /* Weather & World Clock Panel Grid */
+    .weather-grid-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin: 20px 0 10px 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .weather-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .weather-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .city-select {
+      background: #1a1a1a;
+      color: #fff;
+      border: 1px solid var(--border);
+      padding: 5px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      width: 130px;
+    }
+
+    .time-txt {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .weather-txt {
+      font-size: 0.8rem;
+      color: #3b82f6;
+      font-weight: 600;
+      margin-top: 2px;
+    }
 
     /* Forms & Inputs */
     .form-group {
@@ -225,30 +299,10 @@
       border: 1px solid var(--border);
     }
 
-    /* History & Filters */
-    .filter-row {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 15px;
-    }
-
-    .history-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-
-    .history-item {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      padding: 14px;
-      border-radius: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-    }
-
+    /* History */
+    .filter-row { display: flex; gap: 10px; margin-bottom: 15px; }
+    .history-list { display: flex; flex-direction: column; gap: 10px; }
+    .history-item { background: var(--card-bg); border: 1px solid var(--border); padding: 14px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
     .history-info { max-width: 60%; }
     .history-note { font-size: 0.95rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .history-date { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
@@ -266,14 +320,8 @@
     .calc-title { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 10px; }
     .calc-result { font-size: 1.3rem; font-weight: 700; color: var(--text-main); }
 
-    /* Footer Branding */
-    footer {
-      text-align: center;
-      padding: 20px 0;
-      font-size: 0.75rem;
-      color: var(--text-muted);
-      margin-top: auto;
-    }
+    /* Footer */
+    footer { text-align: center; padding: 20px 0; font-size: 0.75rem; color: var(--text-muted); margin-top: auto; }
 
     /* Bottom Nav Bar */
     .bottom-nav {
@@ -309,27 +357,8 @@
     .nav-icon { font-size: 1.1rem; }
 
     /* Modal */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(5px);
-      z-index: 200;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
-    .modal-content {
-      background: var(--card-bg);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      width: 100%;
-      max-width: 400px;
-    }
-
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(5px); z-index: 200; justify-content: center; align-items: center; padding: 20px; }
+    .modal-content { background: var(--card-bg); border: 1px solid var(--border); border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; }
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
     .full-note { color: var(--text-main); font-size: 1rem; line-height: 1.5; word-break: break-word; margin-bottom: 15px; }
@@ -368,6 +397,13 @@
         </div>
       </div>
 
+      <!-- Any Chosen Currency Conversion Bar -->
+      <div class="custom-curr-row">
+        <label style="font-size: 0.7rem; color: var(--text-muted);">Quick Convert Main Balance To Any Currency:</label>
+        <select id="quick-curr-select" class="custom-curr-select" onchange="updateQuickCurrency()"></select>
+        <div class="custom-curr-result" id="quick-curr-result">0.00</div>
+      </div>
+
       <div class="stats-row">
         <div class="stat-item stat-green">
           <span>▲</span> <span id="income-pct">0%</span> Income
@@ -375,6 +411,51 @@
         <div class="stat-item stat-red">
           <span>▼</span> <span id="expense-pct">0%</span> Spend
         </div>
+      </div>
+    </div>
+
+    <!-- 5 Live Weather & Clock Panels -->
+    <div class="weather-grid-title">World Clocks & Live Weather</div>
+    <div class="weather-container">
+      <!-- 5 Country Panels -->
+      <div class="weather-card" id="w-card-0">
+        <div>
+          <select class="city-select" onchange="updateCity(0, this.value)"></select>
+          <div class="weather-txt" id="w-temp-0">Loading weather...</div>
+        </div>
+        <div class="time-txt" id="w-time-0">--:--:--</div>
+      </div>
+
+      <div class="weather-card" id="w-card-1">
+        <div>
+          <select class="city-select" onchange="updateCity(1, this.value)"></select>
+          <div class="weather-txt" id="w-temp-1">Loading weather...</div>
+        </div>
+        <div class="time-txt" id="w-time-1">--:--:--</div>
+      </div>
+
+      <div class="weather-card" id="w-card-2">
+        <div>
+          <select class="city-select" onchange="updateCity(2, this.value)"></select>
+          <div class="weather-txt" id="w-temp-2">Loading weather...</div>
+        </div>
+        <div class="time-txt" id="w-time-2">--:--:--</div>
+      </div>
+
+      <div class="weather-card" id="w-card-3">
+        <div>
+          <select class="city-select" onchange="updateCity(3, this.value)"></select>
+          <div class="weather-txt" id="w-temp-3">Loading weather...</div>
+        </div>
+        <div class="time-txt" id="w-time-3">--:--:--</div>
+      </div>
+
+      <div class="weather-card" id="w-card-4">
+        <div>
+          <select class="city-select" onchange="updateCity(4, this.value)"></select>
+          <div class="weather-txt" id="w-temp-4">Loading weather...</div>
+        </div>
+        <div class="time-txt" id="w-time-4">--:--:--</div>
       </div>
     </div>
   </div>
@@ -442,7 +523,7 @@
     <br>
     <div class="calc-card">
       <div style="font-size: 0.85rem; color: var(--accent); font-weight:700; margin-bottom: 10px;">
-        Converting: <span id="conv-pair-txt">RSD to LKR</span>
+        Main Pair: <span id="conv-pair-txt">RSD to LKR</span>
       </div>
       <div class="form-group">
         <label>Exchange Rate (1 <span id="conv-from-lbl">RSD</span> = ? <span id="conv-to-lbl">LKR</span>)</label>
@@ -451,11 +532,31 @@
     </div>
 
     <div class="calc-card">
-      <div class="calc-title">Custom Amount Calculator</div>
+      <div class="calc-title">Main Pair Calculator</div>
       <div class="form-group">
-        <input type="number" id="custom-val" step="0.0001" placeholder="Enter amount to convert" oninput="calcCustom()">
+        <input type="number" id="custom-val" step="0.0001" placeholder="Enter amount" oninput="calcCustom()">
       </div>
       <div class="calc-result" id="custom-calc-result">0.00</div>
+    </div>
+
+    <!-- Independent Dual-Currency Live Calculator -->
+    <div class="calc-card" style="border-color: var(--accent);">
+      <div class="calc-title" style="color:var(--text-main); font-weight:700;">Independent Live Dual-Currency Tool</div>
+      <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:10px;">Try any two currencies with custom values at live rates.</p>
+      
+      <div class="form-group">
+        <label>From Currency</label>
+        <select id="free-from-curr" onchange="calcFreeConverter()"></select>
+      </div>
+      <div class="form-group">
+        <label>To Currency</label>
+        <select id="free-to-curr" onchange="calcFreeConverter()"></select>
+      </div>
+      <div class="form-group">
+        <label>Amount to Test</label>
+        <input type="number" id="free-amount" step="0.0001" placeholder="Enter test amount" oninput="calcFreeConverter()">
+      </div>
+      <div class="calc-result" id="free-calc-result" style="color:var(--green);">0.00</div>
     </div>
   </div>
 
@@ -463,7 +564,6 @@
   <div id="settings-panel" class="panel">
     <h3>Settings & Data Backup</h3>
     <br>
-    <!-- Currency Setup Form -->
     <div class="calc-card">
       <div class="calc-title" style="color:var(--text-main); font-weight:700;">App Currency Pair Setup</div>
       <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:12px;">Select primary earning currency and target comparison currency for the whole app.</p>
@@ -540,9 +640,21 @@
   <script>
     const CURRENCIES = ["RSD", "LKR", "USD", "EUR", "GBP", "INR", "AUD", "CAD", "SAR", "AED", "JPY", "CNY", "CHF", "SGD", "NZD", "KWD", "QAR"];
 
+    const CITIES = [
+      { name: "Colombo, LK", tz: "Asia/Colombo", lat: 6.9271, lon: 79.8612 },
+      { name: "Belgrade, RS", tz: "Europe/Belgrade", lat: 44.7866, lon: 20.4489 },
+      { name: "London, UK", tz: "Europe/London", lat: 51.5074, lon: -0.1278 },
+      { name: "New York, US", tz: "America/New_York", lat: 40.7128, lon: -74.0060 },
+      { name: "Dubai, AE", tz: "Asia/Dubai", lat: 25.2048, lon: 55.2708 },
+      { name: "Tokyo, JP", tz: "Asia/Tokyo", lat: 35.6762, lon: 139.6503 },
+      { name: "Paris, FR", tz: "Europe/Paris", lat: 48.8566, lon: 2.3522 },
+      { name: "Sydney, AU", tz: "Australia/Sydney", lat: -33.8688, lon: 151.2093 }
+    ];
+
     let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
     let mainCurrency = localStorage.getItem('ms_main_curr') || "RSD";
     let secondCurrency = localStorage.getItem('ms_second_curr') || "LKR";
+    let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [0, 1, 2, 3, 4];
     let activeRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
     let liveRatesData = {};
 
@@ -551,19 +663,30 @@
       return currency ? `${formatted} ${currency}` : formatted;
     }
 
-    function initSettingsCurrencies() {
+    function initCurrenciesAndUI() {
       const mainSel = document.getElementById('set-main-curr');
       const secSel = document.getElementById('set-second-curr');
-      mainSel.innerHTML = '';
-      secSel.innerHTML = '';
+      const quickSel = document.getElementById('quick-curr-select');
+      const freeFrom = document.getElementById('free-from-curr');
+      const freeTo = document.getElementById('free-to-curr');
+
+      mainSel.innerHTML = ''; secSel.innerHTML = ''; quickSel.innerHTML = ''; freeFrom.innerHTML = ''; freeTo.innerHTML = '';
 
       CURRENCIES.forEach(c => {
         mainSel.add(new Option(c, c));
         secSel.add(new Option(c, c));
+        quickSel.add(new Option(c, c));
+        freeFrom.add(new Option(c, c));
+        freeTo.add(new Option(c, c));
       });
 
       mainSel.value = mainCurrency;
       secSel.value = secondCurrency;
+      quickSel.value = "GBP";
+      freeFrom.value = "USD";
+      freeTo.value = "LKR";
+
+      initWeatherCitySelectors();
       updateUIElements();
     }
 
@@ -628,7 +751,7 @@
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
 
-    // Auto Fetch Google/Open Exchange Live Rates
+    // Fetch Rates
     async function fetchLiveGoogleRates() {
       try {
         const res = await fetch(`https://open.er-api.com/v6/latest/${mainCurrency}`);
@@ -646,10 +769,9 @@
 
           updateDashboard();
           calcCustom();
+          calcFreeConverter();
         }
-      } catch (e) {
-        console.log("Error fetching rates:", e);
-      }
+      } catch (e) { console.log("Error fetching rates:", e); }
     }
 
     function manualRateChange() {
@@ -669,7 +791,6 @@
       const mainBal = totalIncome - totalSpend;
       document.getElementById('main-balance').innerText = `${formatMoney(mainBal)} ${mainCurrency}`;
 
-      // Convert to USD, EUR, and 2nd Selected Currency
       const usdRate = liveRatesData['USD'] || 0;
       const eurRate = liveRatesData['EUR'] || 0;
 
@@ -677,14 +798,85 @@
       document.getElementById('val-eur').innerText = formatMoney(mainBal * eurRate, '€');
       document.getElementById('val-2nd').innerText = formatMoney(mainBal * activeRate, secondCurrency);
 
+      updateQuickCurrency();
+
       const totalFlow = totalIncome + totalSpend;
       document.getElementById('income-pct').innerText = `${totalFlow > 0 ? Math.round((totalIncome/totalFlow)*100) : 0}%`;
       document.getElementById('expense-pct').innerText = `${totalFlow > 0 ? Math.round((totalSpend/totalFlow)*100) : 0}%`;
     }
 
+    function updateQuickCurrency() {
+      let totalIncome = 0, totalSpend = 0;
+      transactions.forEach(t => { if(t.type === 'income') totalIncome += t.amount; if(t.type === 'spend') totalSpend += t.amount; });
+      const mainBal = totalIncome - totalSpend;
+      
+      const targetCurr = document.getElementById('quick-curr-select').value;
+      const rate = liveRatesData[targetCurr] || 0;
+      document.getElementById('quick-curr-result').innerText = formatMoney(mainBal * rate, targetCurr);
+    }
+
     function calcCustom() {
       const customVal = parseFloat(document.getElementById('custom-val').value) || 0;
       document.getElementById('custom-calc-result').innerText = formatMoney(customVal * activeRate, secondCurrency);
+    }
+
+    // Independent Dual Converter Calculation
+    async function calcFreeConverter() {
+      const fromC = document.getElementById('free-from-curr').value;
+      const toC = document.getElementById('free-to-curr').value;
+      const amt = parseFloat(document.getElementById('free-amount').value) || 0;
+
+      try {
+        const res = await fetch(`https://open.er-api.com/v6/latest/${fromC}`);
+        const data = await res.json();
+        if(data && data.rates && data.rates[toC]) {
+          const rate = data.rates[toC];
+          document.getElementById('free-calc-result').innerText = formatMoney(amt * rate, toC);
+        }
+      } catch(e) { console.log(e); }
+    }
+
+    // Live Clocks & Weather
+    function initWeatherCitySelectors() {
+      for(let i=0; i<5; i++) {
+        const sel = document.querySelectorAll('.city-select')[i];
+        sel.innerHTML = '';
+        CITIES.forEach((c, idx) => {
+          sel.add(new Option(c.name, idx));
+        });
+        sel.value = selectedCities[i];
+        fetchWeatherForIndex(i);
+      }
+      setInterval(updateWorldClocks, 1000);
+    }
+
+    function updateCity(panelIdx, cityIdx) {
+      selectedCities[panelIdx] = parseInt(cityIdx);
+      localStorage.setItem('ms_selected_cities', JSON.stringify(selectedCities));
+      fetchWeatherForIndex(panelIdx);
+    }
+
+    function updateWorldClocks() {
+      for(let i=0; i<5; i++) {
+        const cityObj = CITIES[selectedCities[i]];
+        if(cityObj) {
+          const timeStr = new Date().toLocaleTimeString('en-US', { timeZone: cityObj.tz, hour12: false });
+          document.getElementById(`w-time-${i}`).innerText = timeStr;
+        }
+      }
+    }
+
+    async function fetchWeatherForIndex(idx) {
+      const cityObj = CITIES[selectedCities[idx]];
+      try {
+        const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${cityObj.lat}&longitude=${cityObj.lon}&current_weather=true`);
+        const data = await res.json();
+        if(data && data.current_weather) {
+          document.getElementById(`w-temp-${idx}`).innerText = `${data.current_weather.temperature}°C Temp`;
+        }
+      } catch(e) {
+        document.getElementById(`w-temp-${idx}`).innerText = `-- °C`;
+      }
     }
 
     // Render History
@@ -735,12 +927,10 @@
       document.getElementById('note-modal').style.display = 'flex';
     }
 
-    function closeModal() {
-      document.getElementById('note-modal').style.display = 'none';
-    }
+    function closeModal() { document.getElementById('note-modal').style.display = 'none'; }
 
     function exportData() {
-      const backupObj = { transactions, mainCurrency, secondCurrency };
+      const backupObj = { transactions, mainCurrency, secondCurrency, selectedCities };
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
@@ -762,8 +952,9 @@
             transactions = imported.transactions;
             if (imported.mainCurrency) mainCurrency = imported.mainCurrency;
             if (imported.secondCurrency) secondCurrency = imported.secondCurrency;
+            if (imported.selectedCities) selectedCities = imported.selectedCities;
             saveData();
-            initSettingsCurrencies();
+            initCurrenciesAndUI();
             fetchLiveGoogleRates();
             alert("Data restored successfully!");
             switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
@@ -778,8 +969,8 @@
       updateDashboard();
     }
 
-    // Init App
-    initSettingsCurrencies();
+    // Init
+    initCurrenciesAndUI();
     setNowDate();
     fetchLiveGoogleRates();
   </script>
