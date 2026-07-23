@@ -349,6 +349,52 @@
       color: #fff;
     }
 
+    /* Conversion Preview (Income / Spend forms + Modal) */
+    .conv-preview {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+      margin-bottom: 4px;
+    }
+
+    .conv-preview-box {
+      background: #181818;
+      border: 1px solid var(--border);
+      padding: 8px 4px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .conv-preview-label {
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .conv-preview-amount {
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 2px;
+      color: #e0e0e0;
+    }
+
+    /* Modal action buttons row */
+    .modal-actions-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .modal-actions-row .btn {
+      margin-top: 0;
+    }
+
+    .edit-btn {
+      background: var(--accent) !important;
+      color: #fff !important;
+    }
+
     /* Calculator Cards */
     .calc-card {
       background: var(--card-bg);
@@ -517,7 +563,21 @@
     <form id="income-form">
       <div class="form-group">
         <label>Amount (<span class="curr-symbol">RSD</span>)</label>
-        <input type="number" id="inc-amount" step="0.0001" placeholder="0.00" required>
+        <input type="number" id="inc-amount" step="0.0001" placeholder="0.00" required oninput="updateConversionPreview('inc')">
+        <div class="conv-preview">
+          <div class="conv-preview-box">
+            <div class="conv-preview-label">USD</div>
+            <div class="conv-preview-amount" id="inc-conv-usd">0.00</div>
+          </div>
+          <div class="conv-preview-box">
+            <div class="conv-preview-label">EUR</div>
+            <div class="conv-preview-amount" id="inc-conv-eur">0.00</div>
+          </div>
+          <div class="conv-preview-box">
+            <div class="conv-preview-label" id="inc-conv-2nd-label">LKR</div>
+            <div class="conv-preview-amount" id="inc-conv-2nd">0.00</div>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label>Note / Description</label>
@@ -538,7 +598,21 @@
     <form id="spend-form">
       <div class="form-group">
         <label>Amount (<span class="curr-symbol">RSD</span>)</label>
-        <input type="number" id="exp-amount" step="0.0001" placeholder="0.00" required>
+        <input type="number" id="exp-amount" step="0.0001" placeholder="0.00" required oninput="updateConversionPreview('exp')">
+        <div class="conv-preview">
+          <div class="conv-preview-box">
+            <div class="conv-preview-label">USD</div>
+            <div class="conv-preview-amount" id="exp-conv-usd">0.00</div>
+          </div>
+          <div class="conv-preview-box">
+            <div class="conv-preview-label">EUR</div>
+            <div class="conv-preview-amount" id="exp-conv-eur">0.00</div>
+          </div>
+          <div class="conv-preview-box">
+            <div class="conv-preview-label" id="exp-conv-2nd-label">LKR</div>
+            <div class="conv-preview-amount" id="exp-conv-2nd">0.00</div>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <label>Note / Description</label>
@@ -681,10 +755,68 @@
         <h4 id="modal-type">Details</h4>
         <button class="modal-close" onclick="closeModal()">&times;</button>
       </div>
-      <div class="full-note" id="modal-note"></div>
-      <div style="font-size: 0.8rem; color: var(--text-muted);" id="modal-date"></div>
-      <div style="font-size: 1.2rem; font-weight: 700; margin-top: 10px;" id="modal-amount"></div>
-      <button class="btn" id="modal-delete-btn" style="background: var(--red); color: #fff; margin-top: 15px;">Delete Transaction</button>
+
+      <!-- View Mode -->
+      <div id="modal-view-mode">
+        <div class="full-note" id="modal-note"></div>
+        <div style="font-size: 0.8rem; color: var(--text-muted);" id="modal-date"></div>
+        <div style="font-size: 1.2rem; font-weight: 700; margin-top: 10px;" id="modal-amount"></div>
+
+        <!-- Multi-currency conversion of this transaction -->
+        <div class="conv-preview">
+          <div class="conv-preview-box">
+            <div class="conv-preview-label">USD</div>
+            <div class="conv-preview-amount" id="modal-conv-usd">0.00</div>
+          </div>
+          <div class="conv-preview-box">
+            <div class="conv-preview-label">EUR</div>
+            <div class="conv-preview-amount" id="modal-conv-eur">0.00</div>
+          </div>
+          <div class="conv-preview-box">
+            <div class="conv-preview-label" id="modal-conv-2nd-label">LKR</div>
+            <div class="conv-preview-amount" id="modal-conv-2nd">0.00</div>
+          </div>
+        </div>
+
+        <div class="modal-actions-row">
+          <button class="btn edit-btn" id="modal-edit-btn">Edit</button>
+          <button class="btn" id="modal-delete-btn" style="background: var(--red); color: #fff;">Delete</button>
+        </div>
+      </div>
+
+      <!-- Edit Mode -->
+      <div id="modal-edit-mode" style="display:none;">
+        <div class="form-group">
+          <label>Amount (<span class="curr-symbol">RSD</span>)</label>
+          <input type="number" id="modal-edit-amount" step="0.0001" oninput="updateConversionPreview('modal-edit')">
+          <div class="conv-preview">
+            <div class="conv-preview-box">
+              <div class="conv-preview-label">USD</div>
+              <div class="conv-preview-amount" id="modal-edit-conv-usd">0.00</div>
+            </div>
+            <div class="conv-preview-box">
+              <div class="conv-preview-label">EUR</div>
+              <div class="conv-preview-amount" id="modal-edit-conv-eur">0.00</div>
+            </div>
+            <div class="conv-preview-box">
+              <div class="conv-preview-label" id="modal-edit-conv-2nd-label">LKR</div>
+              <div class="conv-preview-amount" id="modal-edit-conv-2nd">0.00</div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Note / Description</label>
+          <textarea id="modal-edit-note" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Date & Time</label>
+          <input type="datetime-local" id="modal-edit-date">
+        </div>
+        <div class="modal-actions-row">
+          <button class="btn" id="modal-save-btn" style="background: var(--green); color: #fff;">Save Changes</button>
+          <button class="btn btn-secondary" id="modal-cancel-edit-btn">Cancel</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -1122,6 +1254,14 @@
       document.getElementById('conv-from-lbl').innerText = mainCurrency;
       document.getElementById('conv-to-lbl').innerText = secondCurrency;
 
+      // Keep 2nd-currency labels in sync on the new conversion preview boxes
+      const incLbl = document.getElementById('inc-conv-2nd-label');
+      const expLbl = document.getElementById('exp-conv-2nd-label');
+      const modalEditLbl = document.getElementById('modal-edit-conv-2nd-label');
+      if (incLbl) incLbl.innerText = secondCurrency;
+      if (expLbl) expLbl.innerText = secondCurrency;
+      if (modalEditLbl) modalEditLbl.innerText = secondCurrency;
+
       updateDashboard();
     }
 
@@ -1149,6 +1289,7 @@
       saveData();
       e.target.reset();
       setNowDate();
+      updateConversionPreview('inc');
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
 
@@ -1158,6 +1299,7 @@
       saveData();
       e.target.reset();
       setNowDate();
+      updateConversionPreview('exp');
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
 
@@ -1180,6 +1322,8 @@
           updateDashboard();
           calcCustom();
           calcFreeConverter();
+          updateConversionPreview('inc');
+          updateConversionPreview('exp');
         }
       } catch (e) { console.log("Error fetching rates:", e); }
     }
@@ -1189,6 +1333,8 @@
       localStorage.setItem('ms_manual_rate', activeRate);
       updateDashboard();
       calcCustom();
+      updateConversionPreview('inc');
+      updateConversionPreview('exp');
     }
 
     function updateDashboard() {
@@ -1223,6 +1369,21 @@
       const targetCurr = extractCurrencyCode(document.getElementById('quick-curr-input').value);
       const rate = liveRatesData[targetCurr] || 0;
       document.getElementById('quick-curr-result').innerText = formatMoney(mainBal * rate, targetCurr);
+    }
+
+    // Real-time multi-currency preview for Income / Spend / Modal-Edit amount inputs.
+    // prefix is one of: 'inc', 'exp', 'modal-edit'
+    function updateConversionPreview(prefix) {
+      const amountInput = document.getElementById(`${prefix}-amount`);
+      if (!amountInput) return;
+      const amount = parseFloat(amountInput.value) || 0;
+
+      const usdEl = document.getElementById(`${prefix}-conv-usd`);
+      const eurEl = document.getElementById(`${prefix}-conv-eur`);
+      const secEl = document.getElementById(`${prefix}-conv-2nd`);
+      if (usdEl) usdEl.innerText = formatMoney(amount * (liveRatesData['USD'] || 0), '$');
+      if (eurEl) eurEl.innerText = formatMoney(amount * (liveRatesData['EUR'] || 0), '€');
+      if (secEl) secEl.innerText = formatMoney(amount * activeRate, secondCurrency);
     }
 
     function calcCustom() {
@@ -1329,7 +1490,6 @@
             <div class="history-amount ${isInc ? 'stat-green' : 'stat-red'}">
               ${isInc ? '+' : '-'} ${formatMoney(t.amount)}
             </div>
-            <button class="delete-btn" onclick="deleteTransaction(event, ${t.id})">Delete</button>
           </div>
         `;
         container.appendChild(item);
@@ -1356,14 +1516,73 @@
       const amtEl = document.getElementById('modal-amount');
       amtEl.innerText = `${isInc ? '+' : '-'} ${formatMoney(t.amount, mainCurrency)}`;
       amtEl.className = isInc ? 'stat-green' : 'stat-red';
-      
+
+      // Multi-currency conversion of this specific transaction
+      document.getElementById('modal-conv-2nd-label').innerText = secondCurrency;
+      document.getElementById('modal-conv-usd').innerText = formatMoney(t.amount * (liveRatesData['USD'] || 0), '$');
+      document.getElementById('modal-conv-eur').innerText = formatMoney(t.amount * (liveRatesData['EUR'] || 0), '€');
+      document.getElementById('modal-conv-2nd').innerText = formatMoney(t.amount * activeRate, secondCurrency);
+
       const delBtn = document.getElementById('modal-delete-btn');
       delBtn.onclick = () => deleteTransaction(null, currentSelectedId);
 
+      const editBtn = document.getElementById('modal-edit-btn');
+      editBtn.onclick = () => enterEditMode(t);
+
+      const cancelBtn = document.getElementById('modal-cancel-edit-btn');
+      cancelBtn.onclick = () => exitEditMode();
+
+      const saveBtn = document.getElementById('modal-save-btn');
+      saveBtn.onclick = () => saveEditedTransaction(currentSelectedId);
+
+      exitEditMode();
       document.getElementById('note-modal').style.display = 'flex';
     }
 
     function closeModal() { document.getElementById('note-modal').style.display = 'none'; }
+
+    // Switches the modal into edit mode, pre-filling the edit form with the transaction's current values
+    function enterEditMode(t) {
+      document.getElementById('modal-edit-amount').value = t.amount;
+      document.getElementById('modal-edit-note').value = t.note;
+
+      let dateVal = t.date;
+      if (dateVal && dateVal.length > 16) dateVal = dateVal.slice(0, 16);
+      document.getElementById('modal-edit-date').value = dateVal;
+
+      updateConversionPreview('modal-edit');
+
+      document.getElementById('modal-view-mode').style.display = 'none';
+      document.getElementById('modal-edit-mode').style.display = 'block';
+    }
+
+    // Switches the modal back to the read-only view
+    function exitEditMode() {
+      document.getElementById('modal-edit-mode').style.display = 'none';
+      document.getElementById('modal-view-mode').style.display = 'block';
+    }
+
+    // Persists edits made in the modal back into the transactions array & localStorage
+    function saveEditedTransaction(id) {
+      const newAmount = parseFloat(document.getElementById('modal-edit-amount').value);
+      const newNote = document.getElementById('modal-edit-note').value.trim();
+      const newDate = document.getElementById('modal-edit-date').value;
+
+      if (isNaN(newAmount) || newAmount <= 0) { alert("Please enter a valid amount."); return; }
+      if (!newNote) { alert("Please enter a note/description."); return; }
+      if (!newDate) { alert("Please pick a date & time."); return; }
+
+      const t = transactions.find(tx => tx.id === id);
+      if (!t) return;
+
+      t.amount = newAmount;
+      t.note = newNote;
+      t.date = newDate;
+
+      saveData();
+      renderHistory();
+      openModal(t);
+    }
 
     function exportData() {
       const backupObj = { transactions, mainCurrency, secondCurrency, selectedCities };
