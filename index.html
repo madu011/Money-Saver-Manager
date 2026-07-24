@@ -431,13 +431,14 @@
       background: none;
       border: none;
       color: var(--text-muted);
-      font-size: 0.65rem;
+      font-size: 0.58rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       gap: 4px;
       cursor: pointer;
-      width: 16%;
+      width: 13.5%;
+      white-space: nowrap;
     }
 
     .nav-item.active { color: var(--text-main); }
@@ -449,6 +450,111 @@
     .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
     .full-note { color: var(--text-main); font-size: 1rem; line-height: 1.5; word-break: break-word; margin-bottom: 15px; }
+
+    /* Bank / Cash split */
+    .sub-balance-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+    .sub-balance-box {
+      background: #181818;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .sub-balance-label { font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; }
+    .sub-balance-amount { font-size: 1.15rem; font-weight: 800; margin-top: 4px; }
+    .sub-balance-conv { font-size: 0.65rem; color: var(--text-muted); margin-top: 6px; display: flex; flex-direction: column; gap: 2px; }
+
+    /* Account toggle (Bank / Cash) */
+    .account-toggle { display: flex; gap: 8px; margin-top: 8px; }
+    .account-toggle-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #181818;
+      color: var(--text-muted);
+      font-weight: 700;
+      font-size: 0.85rem;
+      cursor: pointer;
+    }
+    .account-toggle-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    .account-tag {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+      margin-left: 6px;
+      background: #1f1f1f;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    /* Rate History button under dates */
+    .rate-hist-btn {
+      width: 100%;
+      margin-top: 8px;
+      padding: 8px;
+      border-radius: 8px;
+      border: 1px dashed var(--border);
+      background: transparent;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .rate-hist-list { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; max-height: 260px; overflow-y: auto; }
+    .rate-hist-item { background: #181818; border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; }
+    .rate-hist-item-dt { font-size: 0.75rem; color: var(--text-muted); }
+    .rate-hist-item-val { font-size: 0.9rem; font-weight: 700; color: var(--accent); }
+
+    /* Chart */
+    .chart-period-row { display: flex; gap: 6px; margin: 14px 0 8px 0; }
+    .chart-period-btn {
+      flex: 1;
+      padding: 7px 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: #181818;
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .chart-period-btn.active { background: #fff; color: #000; }
+    .chart-line-toggle-row { display: flex; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .chart-line-toggle { font-size: 0.7rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px; cursor: pointer; }
+    .chart-line-toggle input { width: auto; padding: 0; }
+    .chart-wrap { background: var(--card-bg); border: 1px solid var(--border); border-radius: 14px; padding: 12px; margin-top: 4px; }
+    .chart-summary-row { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 6px; }
+    .chart-summary-val.up { color: var(--green); }
+    .chart-summary-val.down { color: var(--red); }
+    canvas.trend-canvas { width: 100%; height: 160px; display: block; }
+
+    /* FX Panel */
+    .fx-title-input {
+      font-size: 1rem;
+      font-weight: 800;
+      text-align: center;
+      background: transparent;
+      border: none;
+      border-bottom: 1px dashed var(--border);
+      padding: 6px 0;
+      margin-bottom: 4px;
+    }
+    .fx-country-select-row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .fx-country-select-row select { flex: 1; }
   </style>
 </head>
 <body>
@@ -494,6 +600,28 @@
         </div>
       </div>
 
+      <!-- Bank / Cash Split -->
+      <div class="sub-balance-grid">
+        <div class="sub-balance-box">
+          <div class="sub-balance-label">🏦 Bank</div>
+          <div class="sub-balance-amount" id="bank-balance">0.00</div>
+          <div class="sub-balance-conv">
+            <span id="bank-conv-usd">$0.00</span>
+            <span id="bank-conv-eur">€0.00</span>
+            <span id="bank-conv-2nd">0.00</span>
+          </div>
+        </div>
+        <div class="sub-balance-box">
+          <div class="sub-balance-label">💵 Cash</div>
+          <div class="sub-balance-amount" id="cash-balance">0.00</div>
+          <div class="sub-balance-conv">
+            <span id="cash-conv-usd">$0.00</span>
+            <span id="cash-conv-eur">€0.00</span>
+            <span id="cash-conv-2nd">0.00</span>
+          </div>
+        </div>
+      </div>
+
       <!-- Any Chosen Currency Searchable Conversion Bar -->
       <div class="custom-curr-row">
         <label style="font-size: 0.7rem; color: var(--text-muted);">Quick Convert Main Balance To Any Currency:</label>
@@ -509,6 +637,30 @@
           <span>▼</span> <span id="expense-pct">0%</span> Spend
         </div>
       </div>
+
+      <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:10px;" id="last-updated-dt">Updated: --</div>
+      <button class="rate-hist-btn" onclick="openRateHistory('main')">📜 Rate History (set rate for a specific date/time)</button>
+    </div>
+
+    <!-- Balance Trend Chart -->
+    <div class="chart-wrap">
+      <div class="chart-summary-row">
+        <span>Balance Trend</span>
+        <span class="chart-summary-val" id="home-chart-change">0%</span>
+      </div>
+      <div class="chart-period-row" id="home-chart-periods">
+        <button class="chart-period-btn" data-period="7">7D</button>
+        <button class="chart-period-btn active" data-period="30">30D</button>
+        <button class="chart-period-btn" data-period="90">90D</button>
+        <button class="chart-period-btn" data-period="365">1Y</button>
+        <button class="chart-period-btn" data-period="0">All</button>
+      </div>
+      <div class="chart-line-toggle-row">
+        <label class="chart-line-toggle"><input type="checkbox" id="home-chart-main" checked onchange="renderHomeChart()"> Main</label>
+        <label class="chart-line-toggle"><input type="checkbox" id="home-chart-bank" onchange="renderHomeChart()"> Bank</label>
+        <label class="chart-line-toggle"><input type="checkbox" id="home-chart-cash" onchange="renderHomeChart()"> Cash</label>
+      </div>
+      <canvas class="trend-canvas" id="home-chart-canvas"></canvas>
     </div>
 
     <!-- Live Weather & Clock Panels -->
@@ -580,6 +732,13 @@
         </div>
       </div>
       <div class="form-group">
+        <label>Add To</label>
+        <div class="account-toggle" id="inc-account-toggle">
+          <button type="button" class="account-toggle-btn active" data-account="bank" onclick="setAccountChoice('inc','bank')">🏦 Bank</button>
+          <button type="button" class="account-toggle-btn" data-account="cash" onclick="setAccountChoice('inc','cash')">💵 Cash</button>
+        </div>
+      </div>
+      <div class="form-group">
         <label>Note / Description</label>
         <textarea id="inc-note" rows="3" placeholder="Where did you earn this?" required></textarea>
       </div>
@@ -612,6 +771,13 @@
             <div class="conv-preview-label" id="exp-conv-2nd-label">LKR</div>
             <div class="conv-preview-amount" id="exp-conv-2nd">0.00</div>
           </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Spend From</label>
+        <div class="account-toggle" id="exp-account-toggle">
+          <button type="button" class="account-toggle-btn active" data-account="bank" onclick="setAccountChoice('exp','bank')">🏦 Bank</button>
+          <button type="button" class="account-toggle-btn" data-account="cash" onclick="setAccountChoice('exp','cash')">💵 Cash</button>
         </div>
       </div>
       <div class="form-group">
@@ -715,6 +881,91 @@
     </div>
   </div>
 
+  <!-- Panel 7: 2nd Currency Dedicated Balance -->
+  <div id="fx-panel" class="panel">
+    <input type="text" id="fx-title" class="fx-title-input" placeholder="Page Name (Country)" oninput="onFxTitleInput()">
+    <div class="fx-country-select-row">
+      <select id="fx-country-select" onchange="onFxCountrySelect()"></select>
+    </div>
+
+    <div class="balance-card">
+      <div class="balance-label" id="fx-balance-label">2nd Currency Balance</div>
+      <div class="balance-amount" id="fx-balance">0.00</div>
+
+      <div class="multi-currency-grid">
+        <div class="curr-val-box">
+          <div class="curr-val-label">USD VALUE</div>
+          <div class="curr-val-amount" id="fx-val-usd">0.00</div>
+        </div>
+        <div class="curr-val-box">
+          <div class="curr-val-label">EUR VALUE</div>
+          <div class="curr-val-amount" id="fx-val-eur">0.00</div>
+        </div>
+        <div class="curr-val-box">
+          <div class="curr-val-label" id="fx-val-1st-label">MAIN VALUE</div>
+          <div class="curr-val-amount" id="fx-val-1st">0.00</div>
+        </div>
+      </div>
+
+      <div style="font-size:0.75rem; color:var(--text-muted); text-align:center; margin-top:10px;" id="fx-last-updated-dt">Updated: --</div>
+      <button class="rate-hist-btn" onclick="openRateHistory('fx')">📜 Rate History (set rate for a specific date/time)</button>
+    </div>
+
+    <!-- FX Trend Chart -->
+    <div class="chart-wrap">
+      <div class="chart-summary-row">
+        <span>Balance Trend</span>
+        <span class="chart-summary-val" id="fx-chart-change">0%</span>
+      </div>
+      <div class="chart-period-row" id="fx-chart-periods">
+        <button class="chart-period-btn" data-period="7">7D</button>
+        <button class="chart-period-btn active" data-period="30">30D</button>
+        <button class="chart-period-btn" data-period="90">90D</button>
+        <button class="chart-period-btn" data-period="365">1Y</button>
+        <button class="chart-period-btn" data-period="0">All</button>
+      </div>
+      <canvas class="trend-canvas" id="fx-chart-canvas"></canvas>
+    </div>
+
+    <h3 style="margin-top:20px;">Add / Spend (<span id="fx-curr-code-lbl">2nd</span>)</h3>
+    <br>
+    <div class="account-toggle" id="fx-type-toggle">
+      <button type="button" class="account-toggle-btn active" data-type="income" onclick="setFxTypeChoice('income')" style="border-color:var(--green);">+ Add</button>
+      <button type="button" class="account-toggle-btn" data-type="spend" onclick="setFxTypeChoice('spend')" style="border-color:var(--red);">- Spend</button>
+    </div>
+    <div class="form-group" style="margin-top:12px;">
+      <label>Amount (<span id="fx-amount-curr-lbl">2nd</span>)</label>
+      <input type="number" id="fx-amount" step="0.0001" placeholder="0.00" oninput="updateFxPreview()">
+      <div class="conv-preview">
+        <div class="conv-preview-box">
+          <div class="conv-preview-label">USD</div>
+          <div class="conv-preview-amount" id="fx-conv-usd">0.00</div>
+        </div>
+        <div class="conv-preview-box">
+          <div class="conv-preview-label">EUR</div>
+          <div class="conv-preview-amount" id="fx-conv-eur">0.00</div>
+        </div>
+        <div class="conv-preview-box">
+          <div class="conv-preview-label" id="fx-conv-1st-label">Main</div>
+          <div class="conv-preview-amount" id="fx-conv-1st">0.00</div>
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Note / Description</label>
+      <textarea id="fx-note" rows="2" placeholder="Optional note..."></textarea>
+    </div>
+    <div class="form-group">
+      <label>Date & Time</label>
+      <input type="datetime-local" id="fx-date">
+    </div>
+    <button class="btn" id="fx-submit-btn" style="background: var(--green); color: #fff;" onclick="submitFxTransaction()">Add Entry</button>
+
+    <h3 style="margin-top:24px;">FX History</h3>
+    <br>
+    <div class="history-list" id="fx-history-container"></div>
+  </div>
+
   <!-- Footer -->
   <footer>
     Made by Madhuranga Yasanath
@@ -741,6 +992,10 @@
     <button class="nav-item" onclick="switchTab('rates-panel', this)">
       <span class="nav-icon">💱</span>
       <span>Rates</span>
+    </button>
+    <button class="nav-item" onclick="switchTab('fx-panel', this)">
+      <span class="nav-icon">🌍</span>
+      <span>2nd Curr</span>
     </button>
     <button class="nav-item" onclick="switchTab('settings-panel', this)">
       <span class="nav-icon">⚙️</span>
@@ -805,6 +1060,13 @@
           </div>
         </div>
         <div class="form-group">
+          <label>Account</label>
+          <div class="account-toggle" id="modal-edit-account-toggle">
+            <button type="button" class="account-toggle-btn active" data-account="bank" onclick="setAccountChoice('modal-edit','bank')">🏦 Bank</button>
+            <button type="button" class="account-toggle-btn" data-account="cash" onclick="setAccountChoice('modal-edit','cash')">💵 Cash</button>
+          </div>
+        </div>
+        <div class="form-group">
           <label>Note / Description</label>
           <textarea id="modal-edit-note" rows="3"></textarea>
         </div>
@@ -817,6 +1079,32 @@
           <button class="btn btn-secondary" id="modal-cancel-edit-btn">Cancel</button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Rate History Modal -->
+  <div class="modal" id="rate-history-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="rate-hist-title">Rate History</h4>
+        <button class="modal-close" onclick="closeRateHistory()">&times;</button>
+      </div>
+
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="rh-date">
+      </div>
+      <div class="form-group">
+        <label>Time</label>
+        <input type="time" id="rh-time" step="1">
+      </div>
+      <div class="form-group">
+        <label>Rate (1 <span id="rh-from-lbl">RSD</span> = ? <span id="rh-to-lbl">LKR</span>)</label>
+        <input type="number" id="rh-rate" step="0.000001" placeholder="Enter rate for this date/time">
+      </div>
+      <button class="btn" style="background:var(--accent); color:#fff;" onclick="addRateHistoryEntry()">Add Entry</button>
+
+      <div class="rate-hist-list" id="rate-hist-list"></div>
     </div>
   </div>
 
@@ -1175,12 +1463,50 @@
     ];
 
     let transactions = JSON.parse(localStorage.getItem('ms_transactions')) || [];
+    transactions.forEach(t => { if(!t.account) t.account = 'bank'; }); // migrate old entries -> default Bank
     let mainCurrency = localStorage.getItem('ms_main_curr') || "RSD";
     let secondCurrency = localStorage.getItem('ms_second_curr') || "LKR";
     let selectedCities = JSON.parse(localStorage.getItem('ms_selected_cities')) || [27, 31, 35, 36, 34]; 
     let activeRate = parseFloat(localStorage.getItem('ms_active_rate')) || 0;
     let liveRatesData = {};
     let currentSelectedId = null;
+
+    // ---- New: Bank/Cash account choice state ----
+    let incAccountChoice = 'bank';
+    let expAccountChoice = 'bank';
+    let modalEditAccountChoice = 'bank';
+
+    // ---- New: Rate History log (per-date/time manual rates) ----
+    let rateHistory = JSON.parse(localStorage.getItem('ms_rate_history')) || [];
+    let currentRateHistoryScope = 'main';
+
+    // ---- New: Dedicated 2nd-Currency (FX) Panel data ----
+    let fxTransactions = JSON.parse(localStorage.getItem('ms_fx_transactions')) || [];
+    let fxTypeChoice = 'income';
+    let fxRatesData = {};
+    let fxTitleIsCustom = localStorage.getItem('ms_fx_title_custom') === 'true';
+
+    // Small country -> currency map used to auto-fill the FX panel's page name / country
+    const COUNTRY_CURRENCY_MAP = [
+      { country: "Sri Lanka", code: "LKR" }, { country: "Serbia", code: "RSD" },
+      { country: "United States", code: "USD" }, { country: "Eurozone", code: "EUR" },
+      { country: "United Kingdom", code: "GBP" }, { country: "India", code: "INR" },
+      { country: "UAE", code: "AED" }, { country: "Saudi Arabia", code: "SAR" },
+      { country: "Qatar", code: "QAR" }, { country: "Kuwait", code: "KWD" },
+      { country: "Australia", code: "AUD" }, { country: "Canada", code: "CAD" },
+      { country: "Singapore", code: "SGD" }, { country: "Japan", code: "JPY" },
+      { country: "China", code: "CNY" }, { country: "Switzerland", code: "CHF" },
+      { country: "Malaysia", code: "MYR" }, { country: "Thailand", code: "THB" },
+      { country: "South Korea", code: "KRW" }, { country: "Russia", code: "RUB" },
+      { country: "Brazil", code: "BRL" }, { country: "South Africa", code: "ZAR" },
+      { country: "Egypt", code: "EGP" }, { country: "Turkey", code: "TRY" },
+      { country: "Pakistan", code: "PKR" }, { country: "Bangladesh", code: "BDT" },
+      { country: "Nepal", code: "NPR" }, { country: "Philippines", code: "PHP" },
+      { country: "Indonesia", code: "IDR" }, { country: "Vietnam", code: "VND" },
+      { country: "Poland", code: "PLN" }, { country: "Hungary", code: "HUF" },
+      { country: "Croatia", code: "HRK" }, { country: "Romania", code: "RON" },
+      { country: "Mexico", code: "MXN" }, { country: "New Zealand", code: "NZD" }
+    ];
 
     function extractCurrencyCode(str) {
       if(!str) return "USD";
@@ -1242,6 +1568,18 @@
 
       updateUIElements();
       fetchLiveGoogleRates();
+
+      // Keep the 2nd-currency panel in sync with the new pair
+      const match = COUNTRY_CURRENCY_MAP.find(c => c.code === secondCurrency);
+      const fxSel = document.getElementById('fx-country-select');
+      if(fxSel) fxSel.value = match ? match.code : '__custom__';
+      if(!fxTitleIsCustom) {
+        const titleEl = document.getElementById('fx-title');
+        if(titleEl) { titleEl.value = match ? match.country : secondCurrency; localStorage.setItem('ms_fx_title', titleEl.value); }
+      }
+      updateFxLabels();
+      fetchFxRates();
+
       alert(`Currencies updated to ${mainCurrency} & ${secondCurrency}!`);
     }
 
@@ -1278,27 +1616,30 @@
       document.getElementById(panelId).classList.add('active');
       btnElement.classList.add('active');
       
-      if(panelId === 'home-panel') updateDashboard();
+      if(panelId === 'home-panel') { updateDashboard(); renderHomeChart(); }
       if(panelId === 'history-panel') renderHistory();
+      if(panelId === 'fx-panel') { updateFxDashboard(); renderFxHistory(); renderFxChart(); }
     }
 
     // Income & Spend Submissions
     document.getElementById('income-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      transactions.push({ id: Date.now(), type: 'income', amount: parseFloat(document.getElementById('inc-amount').value), note: document.getElementById('inc-note').value, date: document.getElementById('inc-date').value });
+      transactions.push({ id: Date.now(), type: 'income', amount: parseFloat(document.getElementById('inc-amount').value), note: document.getElementById('inc-note').value, date: document.getElementById('inc-date').value, account: incAccountChoice });
       saveData();
       e.target.reset();
       setNowDate();
+      setAccountChoice('inc', 'bank');
       updateConversionPreview('inc');
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
 
     document.getElementById('spend-form').addEventListener('submit', (e) => {
       e.preventDefault();
-      transactions.push({ id: Date.now(), type: 'spend', amount: parseFloat(document.getElementById('exp-amount').value), note: document.getElementById('exp-note').value, date: document.getElementById('exp-date').value });
+      transactions.push({ id: Date.now(), type: 'spend', amount: parseFloat(document.getElementById('exp-amount').value), note: document.getElementById('exp-note').value, date: document.getElementById('exp-date').value, account: expAccountChoice });
       saveData();
       e.target.reset();
       setNowDate();
+      setAccountChoice('exp', 'bank');
       updateConversionPreview('exp');
       switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
     });
@@ -1339,12 +1680,14 @@
 
     function updateDashboard() {
       let totalIncome = 0, totalSpend = 0;
+      let bankBal = 0, cashBal = 0;
       transactions.forEach(t => {
-        if(t.type === 'income') totalIncome += t.amount;
-        if(t.type === 'spend') totalSpend += t.amount;
+        const acc = t.account === 'cash' ? 'cash' : 'bank';
+        if(t.type === 'income') { totalIncome += t.amount; if(acc === 'cash') cashBal += t.amount; else bankBal += t.amount; }
+        if(t.type === 'spend') { totalSpend += t.amount; if(acc === 'cash') cashBal -= t.amount; else bankBal -= t.amount; }
       });
 
-      const mainBal = totalIncome - totalSpend;
+      const mainBal = bankBal + cashBal; // Main Balance = Bank + Cash (always in sync)
       document.getElementById('main-balance').innerText = `${formatMoney(mainBal)} ${mainCurrency}`;
 
       const usdRate = liveRatesData['USD'] || 0;
@@ -1354,11 +1697,45 @@
       document.getElementById('val-eur').innerText = formatMoney(mainBal * eurRate, '€');
       document.getElementById('val-2nd').innerText = formatMoney(mainBal * activeRate, secondCurrency);
 
+      // Bank / Cash sub-balances with USD/EUR/2nd-currency conversions
+      document.getElementById('bank-balance').innerText = `${formatMoney(bankBal)} ${mainCurrency}`;
+      document.getElementById('bank-conv-usd').innerText = `$${formatMoney(bankBal * usdRate)}`;
+      document.getElementById('bank-conv-eur').innerText = `€${formatMoney(bankBal * eurRate)}`;
+      document.getElementById('bank-conv-2nd').innerText = `${formatMoney(bankBal * activeRate)} ${secondCurrency}`;
+
+      document.getElementById('cash-balance').innerText = `${formatMoney(cashBal)} ${mainCurrency}`;
+      document.getElementById('cash-conv-usd').innerText = `$${formatMoney(cashBal * usdRate)}`;
+      document.getElementById('cash-conv-eur').innerText = `€${formatMoney(cashBal * eurRate)}`;
+      document.getElementById('cash-conv-2nd').innerText = `${formatMoney(cashBal * activeRate)} ${secondCurrency}`;
+
       updateQuickCurrency();
 
       const totalFlow = totalIncome + totalSpend;
       document.getElementById('income-pct').innerText = `${totalFlow > 0 ? Math.round((totalIncome/totalFlow)*100) : 0}%`;
       document.getElementById('expense-pct').innerText = `${totalFlow > 0 ? Math.round((totalSpend/totalFlow)*100) : 0}%`;
+
+      const lud = document.getElementById('last-updated-dt');
+      if(lud) lud.innerText = `Updated: ${formatDateTimeNice(new Date())}`;
+
+      renderHomeChart();
+    }
+
+    // Formats a Date object as "DD Mon YYYY, hh:mm:ss AM/PM"
+    function formatDateTimeNice(d) {
+      const datePart = d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+      const timePart = d.toLocaleTimeString('en-US', { hour12: true, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      return `${datePart}, ${timePart}`;
+    }
+
+    // Toggle Bank/Cash (or FX income/spend) selector buttons
+    function setAccountChoice(prefix, account) {
+      const wrap = document.getElementById(`${prefix}-account-toggle`);
+      if(wrap) {
+        wrap.querySelectorAll('.account-toggle-btn').forEach(b => b.classList.toggle('active', b.dataset.account === account));
+      }
+      if(prefix === 'inc') incAccountChoice = account;
+      else if(prefix === 'exp') expAccountChoice = account;
+      else if(prefix === 'modal-edit') modalEditAccountChoice = account;
     }
 
     function updateQuickCurrency() {
@@ -1481,9 +1858,10 @@
         item.className = 'history-item';
         item.onclick = () => openModal(t);
 
+        const accTag = (t.account === 'cash') ? '💵 Cash' : '🏦 Bank';
         item.innerHTML = `
           <div class="history-info">
-            <div class="history-note">${t.note}</div>
+            <div class="history-note">${t.note} <span class="account-tag">${accTag}</span></div>
             <div class="history-date">${t.date.replace('T', ' ')}</div>
           </div>
           <div class="history-right">
@@ -1510,7 +1888,8 @@
     function openModal(t) {
       currentSelectedId = t.id;
       const isInc = t.type === 'income';
-      document.getElementById('modal-type').innerText = isInc ? 'Income Record' : 'Expense Record';
+      const accTag = (t.account === 'cash') ? '💵 Cash' : '🏦 Bank';
+      document.getElementById('modal-type').innerText = `${isInc ? 'Income Record' : 'Expense Record'} · ${accTag}`;
       document.getElementById('modal-note').innerText = t.note;
       document.getElementById('modal-date').innerText = `Date: ${t.date.replace('T', ' ')}`;
       const amtEl = document.getElementById('modal-amount');
@@ -1551,6 +1930,7 @@
       document.getElementById('modal-edit-date').value = dateVal;
 
       updateConversionPreview('modal-edit');
+      setAccountChoice('modal-edit', t.account === 'cash' ? 'cash' : 'bank');
 
       document.getElementById('modal-view-mode').style.display = 'none';
       document.getElementById('modal-edit-mode').style.display = 'block';
@@ -1578,6 +1958,7 @@
       t.amount = newAmount;
       t.note = newNote;
       t.date = newDate;
+      t.account = modalEditAccountChoice;
 
       saveData();
       renderHistory();
@@ -1585,7 +1966,7 @@
     }
 
     function exportData() {
-      const backupObj = { transactions, mainCurrency, secondCurrency, selectedCities };
+      const backupObj = { transactions, mainCurrency, secondCurrency, selectedCities, rateHistory, fxTransactions, fxTitle: document.getElementById('fx-title')?.value };
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
       const downloadAnchor = document.createElement('a');
       downloadAnchor.setAttribute("href", dataStr);
@@ -1605,12 +1986,17 @@
           const imported = JSON.parse(e.target.result);
           if (imported.transactions) {
             transactions = imported.transactions;
+            transactions.forEach(t => { if(!t.account) t.account = 'bank'; });
             if (imported.mainCurrency) mainCurrency = imported.mainCurrency;
             if (imported.secondCurrency) secondCurrency = imported.secondCurrency;
             if (imported.selectedCities) selectedCities = imported.selectedCities;
+            if (imported.rateHistory) { rateHistory = imported.rateHistory; localStorage.setItem('ms_rate_history', JSON.stringify(rateHistory)); }
+            if (imported.fxTransactions) { fxTransactions = imported.fxTransactions; localStorage.setItem('ms_fx_transactions', JSON.stringify(fxTransactions)); }
+            if (imported.fxTitle) { localStorage.setItem('ms_fx_title', imported.fxTitle); localStorage.setItem('ms_fx_title_custom', 'true'); fxTitleIsCustom = true; }
             saveData();
             initCurrenciesAndUI();
             fetchLiveGoogleRates();
+            initFxPanel();
             alert("Data restored successfully!");
             switchTab('home-panel', document.querySelectorAll('.nav-item')[0]);
           }
@@ -1622,6 +2008,221 @@
     function saveData() {
       localStorage.setItem('ms_transactions', JSON.stringify(transactions));
       updateDashboard();
+    }
+
+    // =========================================================
+    // RATE HISTORY (manual rate log for a specific date/time)
+    // =========================================================
+    function openRateHistory(scope) {
+      currentRateHistoryScope = scope; // 'main' or 'fx'
+      const now = new Date();
+      document.getElementById('rh-date').value = now.toISOString().slice(0,10);
+      document.getElementById('rh-time').value = now.toTimeString().slice(0,8);
+      document.getElementById('rh-rate').value = '';
+
+      if(scope === 'main') {
+        document.getElementById('rate-hist-title').innerText = `Rate History — ${mainCurrency} → ${secondCurrency}`;
+        document.getElementById('rh-from-lbl').innerText = mainCurrency;
+        document.getElementById('rh-to-lbl').innerText = secondCurrency;
+      } else {
+        document.getElementById('rate-hist-title').innerText = `Rate History — ${secondCurrency} → ${mainCurrency}`;
+        document.getElementById('rh-from-lbl').innerText = secondCurrency;
+        document.getElementById('rh-to-lbl').innerText = mainCurrency;
+      }
+
+      renderRateHistoryList();
+      document.getElementById('rate-history-modal').style.display = 'flex';
+    }
+
+    function closeRateHistory() {
+      document.getElementById('rate-history-modal').style.display = 'none';
+    }
+
+    function addRateHistoryEntry() {
+      const date = document.getElementById('rh-date').value;
+      const time = document.getElementById('rh-time').value || '00:00:00';
+      const rate = parseFloat(document.getElementById('rh-rate').value);
+      if(!date) { alert('Please pick a date.'); return; }
+      if(isNaN(rate) || rate <= 0) { alert('Please enter a valid rate.'); return; }
+
+      rateHistory.push({
+        id: Date.now(),
+        scope: currentRateHistoryScope,
+        pairFrom: currentRateHistoryScope === 'main' ? mainCurrency : secondCurrency,
+        pairTo: currentRateHistoryScope === 'main' ? secondCurrency : mainCurrency,
+        date, time, rate
+      });
+      localStorage.setItem('ms_rate_history', JSON.stringify(rateHistory));
+      document.getElementById('rh-rate').value = '';
+      renderRateHistoryList();
+    }
+
+    function deleteRateHistoryEntry(id) {
+      rateHistory = rateHistory.filter(r => r.id !== id);
+      localStorage.setItem('ms_rate_history', JSON.stringify(rateHistory));
+      renderRateHistoryList();
+    }
+
+    function renderRateHistoryList() {
+      const list = document.getElementById('rate-hist-list');
+      const items = rateHistory.filter(r => r.scope === currentRateHistoryScope)
+                                .sort((a,b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`));
+      if(!items.length) {
+        list.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding:14px; font-size:0.8rem;">No saved rates yet for this pair.</div>`;
+        return;
+      }
+      list.innerHTML = items.map(r => {
+        const dt = new Date(`${r.date}T${r.time}`);
+        const niceDt = formatDateTimeNice(dt);
+        return `
+          <div class="rate-hist-item">
+            <div>
+              <div class="rate-hist-item-val">1 ${r.pairFrom} = ${formatMoney(r.rate)} ${r.pairTo}</div>
+              <div class="rate-hist-item-dt">${niceDt}</div>
+            </div>
+            <button class="delete-btn" onclick="deleteRateHistoryEntry(${r.id})">✕</button>
+          </div>`;
+      }).join('');
+    }
+
+    // =========================================================
+    // TREND CHARTS (Home = Main/Bank/Cash, FX = 2nd currency)
+    // =========================================================
+    let homeChartPeriod = 30;
+    let fxChartPeriod = 30;
+
+    document.addEventListener('click', (e) => {
+      if(e.target.closest('#home-chart-periods .chart-period-btn')) {
+        const btn = e.target.closest('.chart-period-btn');
+        document.querySelectorAll('#home-chart-periods .chart-period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        homeChartPeriod = parseInt(btn.dataset.period, 10);
+        renderHomeChart();
+      }
+      if(e.target.closest('#fx-chart-periods .chart-period-btn')) {
+        const btn = e.target.closest('.chart-period-btn');
+        document.querySelectorAll('#fx-chart-periods .chart-period-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        fxChartPeriod = parseInt(btn.dataset.period, 10);
+        renderFxChart();
+      }
+    });
+
+    // Builds a cumulative-balance time series from a list of {date, type, amount, account}
+    function buildSeries(list, periodDays, accountFilter) {
+      let sorted = [...list].sort((a,b) => new Date(a.date) - new Date(b.date));
+      if(accountFilter) sorted = sorted.filter(t => (t.account === 'cash' ? 'cash' : 'bank') === accountFilter);
+
+      let cutoff = null;
+      if(periodDays && periodDays > 0) {
+        cutoff = new Date();
+        cutoff.setDate(cutoff.getDate() - periodDays);
+      }
+
+      let running = 0;
+      // establish starting balance before the cutoff window
+      sorted.forEach(t => {
+        if(cutoff && new Date(t.date) < cutoff) {
+          running += (t.type === 'income') ? t.amount : -t.amount;
+        }
+      });
+
+      const points = [{ x: cutoff || (sorted.length ? new Date(sorted[0].date) : new Date()), y: running }];
+      sorted.forEach(t => {
+        if(!cutoff || new Date(t.date) >= cutoff) {
+          running += (t.type === 'income') ? t.amount : -t.amount;
+          points.push({ x: new Date(t.date), y: running });
+        }
+      });
+      points.push({ x: new Date(), y: running });
+      return points;
+    }
+
+    function drawTrendChart(canvasId, seriesList, summaryElId) {
+      const canvas = document.getElementById(canvasId);
+      if(!canvas) return;
+      const dpr = window.devicePixelRatio || 1;
+      const rect = canvas.getBoundingClientRect();
+      const w = rect.width || 300, h = 160;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0, 0, w, h);
+
+      const allPoints = seriesList.flatMap(s => s.points);
+      if(!allPoints.length) return;
+
+      const minX = Math.min(...allPoints.map(p => p.x.getTime()));
+      const maxX = Math.max(...allPoints.map(p => p.x.getTime()));
+      const minY = Math.min(...allPoints.map(p => p.y), 0);
+      const maxY = Math.max(...allPoints.map(p => p.y), 0);
+      const padY = (maxY - minY) * 0.1 || 1;
+      const yLo = minY - padY, yHi = maxY + padY;
+      const xSpan = (maxX - minX) || 1;
+      const padX = 8;
+
+      const toX = t => padX + ((t - minX) / xSpan) * (w - padX*2);
+      const toY = v => h - 4 - ((v - yLo) / (yHi - yLo)) * (h - 20);
+
+      // zero line
+      ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, toY(0)); ctx.lineTo(w, toY(0));
+      ctx.stroke();
+
+      let primaryChangeEl = summaryElId ? document.getElementById(summaryElId) : null;
+
+      seriesList.forEach(s => {
+        if(!s.points.length) return;
+        const first = s.points[0].y, last = s.points[s.points.length - 1].y;
+        const up = last >= first;
+        const color = s.colorOverride || (up ? '#22c55e' : '#ef4444');
+
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        s.points.forEach((p, i) => {
+          const x = toX(p.x.getTime()), y = toY(p.y);
+          if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+        });
+        ctx.stroke();
+
+        if(s.isPrimary && primaryChangeEl) {
+          const pct = first !== 0 ? (((last - first) / Math.abs(first)) * 100) : (last === 0 ? 0 : 100);
+          primaryChangeEl.innerText = `${up ? '▲' : '▼'} ${Math.abs(pct).toFixed(1)}%`;
+          primaryChangeEl.className = `chart-summary-val ${up ? 'up' : 'down'}`;
+        }
+      });
+      
+    }
+document.getElementById('fx-history-container');
+      const sorted = [...fxTransactions].sort((a,b) => new Date(b.date) - new Date(a.date));
+      if(!sorted.length) {
+        container.innerHTML = `<div style="text-align:center; color: var(--text-muted); padding:20px;">No entries yet.</div>`;
+        return;
+      }
+      container.innerHTML = sorted.map(t => {
+        const isInc = t.type === 'income';
+        return `
+          <div class="history-item" style="cursor:default;">
+            <div class="history-info">
+              <div class="history-note">${t.note}</div>
+              <div class="history-date">${t.date.replace('T', ' ')}</div>
+            </div>
+            <div class="history-right">
+              <div class="history-amount ${isInc ? 'stat-green' : 'stat-red'}">${isInc ? '+' : '-'} ${formatMoney(t.amount)} ${secondCurrency}</div>
+              <button class="delete-btn" onclick="deleteFxTransaction(${t.id})">✕</button>
+            </div>
+          </div>`;
+      }).join('');
+    }
+
+    // Auto-save FX panel data (no manual "Save" button — every add/spend/delete saves instantly)
+    function saveFxData() {
+      localStorage.setItem('ms_fx_transactions', JSON.stringify(fxTransactions));
+      updateFxDashboard();
+      renderFxHistory();
     }
 
     // Register Service Worker for PWA Offline Capability
@@ -1660,6 +2261,10 @@
     initCurrenciesAndUI();
     setNowDate();
     fetchLiveGoogleRates();
+    initFxPanel();
+    setFxTypeChoice('income');
   </script>
 </body>
 </html>
+
+    
